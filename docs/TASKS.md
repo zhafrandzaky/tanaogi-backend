@@ -1,7 +1,7 @@
 # TASKS.md — TanaOgi Backend Task Tracker
 
 Update status task ini saat mulai [~] dan selesai [x].
-Prompt lengkap per task ada di docs/PROMPTS.md.
+Prompt lengkap per task ada di ~/tanaogi-workspace/PROMPTS.md.
 
 ---
 

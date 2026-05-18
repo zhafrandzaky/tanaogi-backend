@@ -16,7 +16,7 @@ tanaogi-backend/
 ## Dockerfile
 
 ```dockerfile
-FROM php:8.4-fpm
+FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y \
     git curl libpq-dev libzip-dev zip unzip \

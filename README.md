@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
-  <img src="https://img.shields.io/badge/PHP-8.4+-777BB4?style=for-the-badge&logo=php&logoColor=white" />
+  <img src="https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white" />
   <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" />
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
   <img src="https://img.shields.io/badge/Deployed%20on-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" />
@@ -146,7 +146,7 @@ Production : https://api.tanaogi.com/api/v1
 | GET | `/settings/whatsapp` | Public | Nomor & template WA admin |
 | GET | `/maintenance/status` | Public | Status maintenance |
 | POST | `/auth/login` | Public | Login admin |
-| POST | `/auth/logout` | Admin | Logout |
+| POST | `/auth/logout` | Auth | Logout |
 | * | `/admin/*` | Admin | Full admin control |
 
 Dokumentasi endpoint lengkap ada di [`docs/INTEGRATION.md`](docs/INTEGRATION.md).
@@ -173,6 +173,7 @@ Mengikuti [Conventional Commits](https://www.conventionalcommits.org/):
 feat: add destination CRUD endpoints
 fix: resolve driver availability query bug
 chore: setup Docker and docker-compose
+docs: update API endpoint documentation
 migration: create destinations table
 refactor: extract logic to DestinationService
 test: add authentication unit tests
@@ -221,11 +222,16 @@ Salin `.env.example` ke `.env` dan isi variabel berikut:
 
 | Variable | Deskripsi |
 |---|---|
+| `APP_NAME` | Nama aplikasi |
 | `APP_KEY` | Generate via `php artisan key:generate` |
+| `APP_ENV` | Environment (`local` atau `production`) |
+| `APP_DEBUG` | Mode debug (`true` untuk dev, `false` untuk production) |
 | `APP_URL` | URL aplikasi |
 | `FRONTEND_URL` | URL frontend untuk CORS |
 | `MAINTENANCE_SECRET` | Secret key untuk bypass maintenance |
+| `DB_CONNECTION` | Driver database (gunakan `pgsql`) |
 | `DB_HOST` | PostgreSQL host (gunakan `postgres` untuk Docker) |
+| `DB_PORT` | Port PostgreSQL (default: `5432`) |
 | `DB_DATABASE` | Nama database |
 | `DB_USERNAME` | Username database |
 | `DB_PASSWORD` | Password database |
@@ -238,6 +244,13 @@ Salin `.env.example` ke `.env` dan isi variabel berikut:
 | `FONNTE_TOKEN` | Token Fonnte API untuk WA reminder |
 | `ADMIN_WHATSAPP` | Nomor WA admin (format: 628xxx) |
 | `SANCTUM_STATEFUL_DOMAINS` | Domain frontend untuk Sanctum |
+| `MAIL_MAILER` | Mail driver — opsional, hanya jika email aktif |
+| `MAIL_HOST` | SMTP host |
+| `MAIL_PORT` | SMTP port |
+| `MAIL_USERNAME` | SMTP username |
+| `MAIL_PASSWORD` | SMTP password |
+| `MAIL_FROM_ADDRESS` | Alamat pengirim email |
+| `MAIL_FROM_NAME` | Nama pengirim email |
 
 ---
 

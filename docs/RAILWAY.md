@@ -6,7 +6,7 @@
 Railway Project: tanaogi
 ├── Service: tanaogi-api     (Laravel app)
 │   └── Domain: api.tanaogi.com
-└── Service: tanaogi-db      (PostgreSQL)
+└── Service: tanaogi-db      (MySQL 8.0)
 
 Cloudflare R2: tanaogi-storage
 └── Domain: storage.tanaogi.com
@@ -21,8 +21,8 @@ Cloudflare R2: tanaogi-storage
 - New Project → Empty Project
 - Beri nama: `tanaogi`
 
-### 2. Tambah PostgreSQL
-- New Service → Database → PostgreSQL
+### 2. Tambah MySQL
+- New Service → Database → MySQL
 - Railway otomatis generate kredensial
 - Salin connection details dari tab Variables
 
@@ -48,12 +48,12 @@ MAINTENANCE_SECRET=rahasia_tanaogi_admin_production
 
 LOG_CHANNEL=stderr
 
-DB_CONNECTION=pgsql
-DB_HOST=${{tanaogi-db.PGHOST}}
-DB_PORT=${{tanaogi-db.PGPORT}}
-DB_DATABASE=${{tanaogi-db.PGDATABASE}}
-DB_USERNAME=${{tanaogi-db.PGUSER}}
-DB_PASSWORD=${{tanaogi-db.PGPASSWORD}}
+DB_CONNECTION=mysql
+DB_HOST=${{tanaogi-db.MYSQLHOST}}
+DB_PORT=${{tanaogi-db.MYSQLPORT}}
+DB_DATABASE=${{tanaogi-db.MYSQLDATABASE}}
+DB_USERNAME=${{tanaogi-db.MYSQLUSER}}
+DB_PASSWORD=${{tanaogi-db.MYSQLPASSWORD}}
 
 SANCTUM_STATEFUL_DOMAINS=tanaogi.com
 
@@ -84,8 +84,8 @@ MAIL_FROM_NAME=TanaOgi
 FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y \
-    git curl libpq-dev libzip-dev zip unzip nginx supervisor \
-    && docker-php-ext-install pdo pdo_pgsql zip bcmath opcache
+    git curl default-mysql-client libzip-dev zip unzip nginx supervisor \
+    && docker-php-ext-install pdo pdo_mysql zip bcmath opcache
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

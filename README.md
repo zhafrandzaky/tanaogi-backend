@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
   <img src="https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white" />
-  <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white" />
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
   <img src="https://img.shields.io/badge/Deployed%20on-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" />
 </p>
@@ -19,7 +19,7 @@ Repo ini adalah backend only. Frontend berada di repo terpisah.
 |---|---|
 | Framework | Laravel 13 |
 | Language | PHP 8.3+ |
-| Database | PostgreSQL 16 |
+| Database | MySQL 8.0 |
 | Auth | Laravel Sanctum |
 | Role & Permission | Spatie Laravel Permission |
 | File Storage | Cloudflare R2 |
@@ -37,7 +37,9 @@ Pastikan sudah terinstall sebelum setup:
 - [Docker](https://www.docker.com/) & Docker Compose
 - [Git](https://git-scm.com/)
 
-Tidak perlu install PHP atau PostgreSQL secara lokal — semuanya berjalan via Docker.
+Tidak perlu install PHP atau MySQL secara lokal — semuanya berjalan via Docker.
+
+> **Developer tanpa Docker (Windows/Mac):** lihat [`docs/HERD.md`](docs/HERD.md)
 
 ---
 
@@ -229,9 +231,9 @@ Salin `.env.example` ke `.env` dan isi variabel berikut:
 | `APP_URL` | URL aplikasi |
 | `FRONTEND_URL` | URL frontend untuk CORS |
 | `MAINTENANCE_SECRET` | Secret key untuk bypass maintenance |
-| `DB_CONNECTION` | Driver database (gunakan `pgsql`) |
-| `DB_HOST` | PostgreSQL host (gunakan `postgres` untuk Docker) |
-| `DB_PORT` | Port PostgreSQL (default: `5432`) |
+| `DB_CONNECTION` | Driver database (gunakan `mysql`) |
+| `DB_HOST` | MySQL host (`mysql` untuk Docker, `127.0.0.1` untuk Herd) |
+| `DB_PORT` | Port MySQL (default: `3306`) |
 | `DB_DATABASE` | Nama database |
 | `DB_USERNAME` | Username database |
 | `DB_PASSWORD` | Password database |
@@ -270,6 +272,7 @@ Salin `.env.example` ke `.env` dan isi variabel berikut:
 | [`docs/EXTERNAL.md`](docs/EXTERNAL.md) | Integrasi Google Maps, WA, Fonnte |
 | [`docs/SCHEDULER.md`](docs/SCHEDULER.md) | Sistem reminder driver |
 | [`docs/DOCKER.md`](docs/DOCKER.md) | Setup Docker & MinIO |
+| [`docs/HERD.md`](docs/HERD.md) | Setup Laravel Herd (Windows/Mac, tanpa Docker) |
 | [`docs/RAILWAY.md`](docs/RAILWAY.md) | Deployment ke Railway |
 | [`docs/TASKS.md`](docs/TASKS.md) | Progress tracker development |
 

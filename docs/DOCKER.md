@@ -19,8 +19,8 @@ tanaogi-backend/
 FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y \
-    git curl libpq-dev libzip-dev zip unzip \
-    && docker-php-ext-install pdo pdo_pgsql zip bcmath
+    git curl default-mysql-client libzip-dev zip unzip \
+    && docker-php-ext-install pdo pdo_mysql zip bcmath
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -55,7 +55,7 @@ services:
     networks:
       - tanaogi_network
     depends_on:
-      - postgres
+      - mysql
       - minio
     environment:
       - APP_ENV=local
@@ -74,20 +74,22 @@ services:
     depends_on:
       - app
 
-  postgres:
-    image: postgres:16-alpine
-    container_name: tanaogi_postgres
+  mysql:
+    image: mysql:8.0
+    container_name: tanaogi_mysql
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "3306:3306"
     environment:
-      POSTGRES_DB: tanaogi
-      POSTGRES_USER: tanaogi_user
-      POSTGRES_PASSWORD: secret
+      MYSQL_DATABASE: tanaogi
+      MYSQL_USER: tanaogi_user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: rootsecret
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     networks:
       - tanaogi_network
+    command: --default-authentication-plugin=mysql_native_password
 
   minio:
     image: minio/minio:latest
@@ -110,7 +112,7 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  mysql_data:
   minio_data:
 ```
 
@@ -159,9 +161,9 @@ MAINTENANCE_SECRET=rahasia_tanaogi_admin_dev
 
 LOG_CHANNEL=stack
 
-DB_CONNECTION=pgsql
-DB_HOST=postgres
-DB_PORT=5432
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
 DB_DATABASE=tanaogi
 DB_USERNAME=tanaogi_user
 DB_PASSWORD=secret
@@ -219,7 +221,7 @@ docker compose exec app bash
 
 # Lihat log
 docker compose logs -f app
-docker compose logs -f postgres
+docker compose logs -f mysql
 docker compose logs -f minio
 
 # Restart container tertentu
@@ -236,8 +238,8 @@ docker compose exec app php artisan config:clear
 docker compose exec app php artisan schedule:run
 docker compose exec app php artisan reminders:send-driver
 
-# Akses PostgreSQL
-docker compose exec postgres psql -U tanaogi_user -d tanaogi
+# Akses MySQL
+docker compose exec mysql mysql -u tanaogi_user -psecret tanaogi
 ```
 
 ---
@@ -254,5 +256,6 @@ docker compose exec app chown -R www-data:www-data storage bootstrap/cache
 Pastikan bucket MinIO sudah dibuat dan policy sudah public.
 Cek `CLOUDFLARE_R2_ENDPOINT=http://minio:9000` (nama service, bukan localhost).
 
-### PostgreSQL tidak bisa connect
-Pastikan `DB_HOST=postgres` (nama service di docker-compose).
+### MySQL tidak bisa connect
+Pastikan `DB_HOST=mysql` (nama service di docker-compose, bukan `localhost` atau `127.0.0.1`).
+Tunggu beberapa detik setelah `docker compose up -d` — MySQL butuh waktu init sebelum siap menerima koneksi.

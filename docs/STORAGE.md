@@ -211,9 +211,36 @@ Untuk TanaOgi skala awal, free tier lebih dari cukup.
 
 ---
 
-## Testing Upload Lokal
+## Development tanpa Docker (Laravel Herd)
 
-Untuk development lokal, bisa pakai disk `local` agar tidak perlu koneksi R2:
+Developer yang menggunakan Herd (Windows/Mac) tanpa Docker dan MinIO bisa pakai disk `local`:
+
+```env
+FILESYSTEM_DISK=local
+```
+
+Foto tersimpan di `storage/app/public/` dan diakses via:
+```
+http://tanaogi-backend.test/storage/
+```
+
+Jalankan storage link sekali saat setup:
+```bash
+php artisan storage:link
+```
+
+**Penting:** `storage/app/public/` sudah ada di `.gitignore` — foto lokal tidak akan ikut ke repo. Pastikan folder ada dengan `.gitkeep`:
+```
+storage/app/public/.gitkeep
+```
+
+Catatan: disk `local` hanya untuk development. Production selalu gunakan R2 Cloudflare.
+
+---
+
+## Testing Upload Lokal (Docker)
+
+Untuk development lokal dengan Docker, bisa pakai disk `local` agar tidak perlu koneksi R2:
 
 `.env.local` (override untuk dev):
 ```env

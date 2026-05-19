@@ -5,8 +5,8 @@
 TanaOgi menggunakan **URL-based versioning** — versi ada di path URL.
 
 ```
-https://api.tanaogi.com/api/v1/destinations
-https://api.tanaogi.com/api/v2/destinations  ← nanti jika ada breaking change
+https://api.tanaogi.zyy.my.id/api/v1/destinations
+https://api.tanaogi.zyy.my.id/api/v2/destinations  ← nanti jika ada breaking change
 ```
 
 ---

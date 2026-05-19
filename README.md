@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
   <img src="https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white" />
-  <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white" />
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
   <img src="https://img.shields.io/badge/Deployed%20on-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" />
 </p>
@@ -19,7 +19,7 @@ Repo ini adalah backend only. Frontend berada di repo terpisah.
 |---|---|
 | Framework | Laravel 13 |
 | Language | PHP 8.3+ |
-| Database | PostgreSQL 16 |
+| Database | MySQL 8.0 |
 | Auth | Laravel Sanctum |
 | Role & Permission | Spatie Laravel Permission |
 | File Storage | Cloudflare R2 |
@@ -37,7 +37,9 @@ Pastikan sudah terinstall sebelum setup:
 - [Docker](https://www.docker.com/) & Docker Compose
 - [Git](https://git-scm.com/)
 
-Tidak perlu install PHP atau PostgreSQL secara lokal — semuanya berjalan via Docker.
+Tidak perlu install PHP atau MySQL secara lokal — semuanya berjalan via Docker.
+
+> **Developer Windows (Laragon/XAMPP):** lihat [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md)
 
 ---
 
@@ -52,7 +54,7 @@ cd tanaogi-backend
 cp .env.example .env
 
 # 3. Isi environment variables yang dibutuhkan di .env
-# Minimal: DB_*, CLOUDFLARE_R2_*, FONNTE_TOKEN, ADMIN_WHATSAPP
+# Minimal: DB_*, CLOUDFLARE_R2_* (minta credentials R2 dari senior), FONNTE_TOKEN, ADMIN_WHATSAPP
 
 # 4. Jalankan Docker
 docker compose up -d
@@ -73,7 +75,6 @@ php artisan migrate --seed
 exit
 
 # API berjalan di http://localhost:8000
-# MinIO console di http://localhost:9001 (user: tanaogi / password: password123)
 ```
 
 ---
@@ -130,7 +131,7 @@ tanaogi-backend/
 
 ```
 Local      : http://localhost:8000/api/v1
-Production : https://api.tanaogi.com/api/v1
+Production : https://api.tanaogi.zyy.my.id/api/v1
 ```
 
 ### Endpoint Utama
@@ -229,16 +230,16 @@ Salin `.env.example` ke `.env` dan isi variabel berikut:
 | `APP_URL` | URL aplikasi |
 | `FRONTEND_URL` | URL frontend untuk CORS |
 | `MAINTENANCE_SECRET` | Secret key untuk bypass maintenance |
-| `DB_CONNECTION` | Driver database (gunakan `pgsql`) |
-| `DB_HOST` | PostgreSQL host (gunakan `postgres` untuk Docker) |
-| `DB_PORT` | Port PostgreSQL (default: `5432`) |
+| `DB_CONNECTION` | Driver database (gunakan `mysql`) |
+| `DB_HOST` | MySQL host (`mysql` untuk Docker, `127.0.0.1` untuk Laragon/XAMPP) |
+| `DB_PORT` | Port MySQL (default: `3306`) |
 | `DB_DATABASE` | Nama database |
 | `DB_USERNAME` | Username database |
 | `DB_PASSWORD` | Password database |
-| `FILESYSTEM_DISK` | Gunakan `r2` untuk production, `r2` + MinIO untuk dev |
-| `CLOUDFLARE_R2_ACCESS_KEY` | R2 access key |
-| `CLOUDFLARE_R2_SECRET_KEY` | R2 secret key |
-| `CLOUDFLARE_R2_BUCKET` | Nama bucket R2 |
+| `FILESYSTEM_DISK` | Selalu `r2` — dev dan production langsung ke R2 Cloudflare |
+| `CLOUDFLARE_R2_ACCESS_KEY` | R2 access key — minta dari senior via chat |
+| `CLOUDFLARE_R2_SECRET_KEY` | R2 secret key — minta dari senior via chat |
+| `CLOUDFLARE_R2_BUCKET` | Dev: `tanaogi-storage-dev`, production: `tanaogi-storage` |
 | `CLOUDFLARE_R2_ENDPOINT` | Endpoint R2 Cloudflare |
 | `CLOUDFLARE_R2_URL` | URL publik R2 / custom domain |
 | `FONNTE_TOKEN` | Token Fonnte API untuk WA reminder |
@@ -269,7 +270,9 @@ Salin `.env.example` ke `.env` dan isi variabel berikut:
 | [`docs/INTEGRATION.md`](docs/INTEGRATION.md) | Semua endpoint API |
 | [`docs/EXTERNAL.md`](docs/EXTERNAL.md) | Integrasi Google Maps, WA, Fonnte |
 | [`docs/SCHEDULER.md`](docs/SCHEDULER.md) | Sistem reminder driver |
-| [`docs/DOCKER.md`](docs/DOCKER.md) | Setup Docker & MinIO |
+| [`docs/DOCKER.md`](docs/DOCKER.md) | Setup Docker (developer Linux/senior) |
+| [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md) | Setup Laragon atau XAMPP (developer Windows) |
+| [`docs/TEAM.md`](docs/TEAM.md) | Panduan tim: git workflow, onboarding, komunikasi |
 | [`docs/RAILWAY.md`](docs/RAILWAY.md) | Deployment ke Railway |
 | [`docs/TASKS.md`](docs/TASKS.md) | Progress tracker development |
 

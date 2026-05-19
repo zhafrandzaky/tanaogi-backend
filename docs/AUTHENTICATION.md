@@ -17,7 +17,7 @@ php artisan install:api
 
 `.env`:
 ```env
-SANCTUM_STATEFUL_DOMAINS=localhost:5173,tanaogi.com
+SANCTUM_STATEFUL_DOMAINS=localhost:5173,tanaogi.zyy.my.id
 ```
 
 `config/sanctum.php`:
@@ -78,7 +78,7 @@ Return token + user data
 ```json
 POST /api/v1/auth/login
 {
-  "email": "admin@tanaogi.com",
+  "email": "admin@tanaogi.zyy.my.id",
   "password": "password"
 }
 ```
@@ -93,7 +93,7 @@ POST /api/v1/auth/login
     "user": {
       "id": "uuid",
       "name": "Admin TanaOgi",
-      "email": "admin@tanaogi.com",
+      "email": "admin@tanaogi.zyy.my.id",
       "role": "admin"
     }
   }
@@ -194,7 +194,7 @@ class AdminUserSeeder extends Seeder
     {
         $user = User::create([
             'name'     => 'Admin TanaOgi',
-            'email'    => 'admin@tanaogi.com',
+            'email'    => 'admin@tanaogi.zyy.my.id',
             'password' => Hash::make('password'),
         ]);
 

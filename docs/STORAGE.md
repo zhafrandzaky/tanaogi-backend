@@ -1,44 +1,75 @@
 # STORAGE.md — R2 Cloudflare Storage TanaOgi
 
-TanaOgi menggunakan **Cloudflare R2** untuk menyimpan semua file upload (foto destinasi).
-R2 dipilih karena gratis 10GB, CDN global otomatis, dan tidak ada egress fee.
+## Overview
+
+TanaOgi menggunakan **Cloudflare R2** untuk semua environment — development dan production.
+Tidak ada MinIO. Tidak ada local disk. Semua developer langsung ke R2.
 
 ---
 
-## Kenapa R2 Bukan Local Storage
+## Dua Bucket R2
 
-Railway tidak punya persistent storage — setiap redeploy semua file di `storage/app` hilang.
-R2 menjamin foto destinasi tetap ada meski redeploy berkali-kali.
+| Bucket | Dipakai Oleh | Domain |
+|---|---|---|
+| `tanaogi-storage-dev` | Semua developer (lokal) | `dev-storage.tanaogi.zyy.my.id` |
+| `tanaogi-storage` | Production (Railway) | `storage.tanaogi.zyy.my.id` |
 
 ---
 
-## Setup R2 di Cloudflare
+## Kenapa Langsung R2 untuk Development
 
-### 1. Buat R2 Bucket
+- Tidak perlu MinIO atau setup storage lokal
+- URL foto sama di semua mesin developer
+- Foto yang diupload developer A langsung bisa dilihat developer B
+- Lebih dekat dengan environment production
+- Developer Windows (Laragon/XAMPP) tidak perlu setup apapun selain isi `.env`
 
-- Login ke https://dash.cloudflare.com
-- Pilih menu **R2 Object Storage**
-- Klik **Create bucket**
-- Nama bucket: `tanaogi-storage`
-- Location: Auto (atau pilih Asia Pacific)
+---
 
-### 2. Buat API Token R2
+## Setup R2 di Cloudflare (dilakukan sekali oleh senior)
 
-- Di halaman R2 → **Manage R2 API tokens**
-- Klik **Create API token**
-- Permission: **Object Read & Write**
-- Scope: **Specific bucket** → `tanaogi-storage`
-- Salin:
-  - `Access Key ID`
-  - `Secret Access Key`
-  - `Endpoint URL` → format: `https://{account_id}.r2.cloudflarestorage.com`
+1. Login ke https://dash.cloudflare.com → **R2 Object Storage**
+2. Buat 2 bucket:
+   - `tanaogi-storage-dev` (untuk development semua developer)
+   - `tanaogi-storage` (untuk production Railway)
+3. Buat API Token:
+   - Di halaman R2 → **Manage R2 API tokens** → **Create API token**
+   - Permission: **Object Read & Write**
+   - Scope: kedua bucket
+   - Salin: `Access Key ID`, `Secret Access Key`, `Endpoint URL`
+4. Setup custom domain:
+   - `dev-storage.tanaogi.zyy.my.id` → bucket `tanaogi-storage-dev`
+   - `storage.tanaogi.zyy.my.id` → bucket `tanaogi-storage`
+   - Set DNS CNAME di Cloudflare domain
 
-### 3. Setup Custom Domain (Opsional tapi Dianjurkan)
+---
 
-- Di halaman bucket `tanaogi-storage` → **Settings** → **Custom Domains**
-- Tambah domain: `storage.tanaogi.com`
-- Set DNS CNAME di Cloudflare domain kamu
-- Ini membuat URL foto jadi: `https://storage.tanaogi.com/destinations/foto.jpg`
+## .env untuk Development (Docker dan Laragon/XAMPP — sama)
+
+```env
+FILESYSTEM_DISK=r2
+
+# R2 dev credentials — dapat dari senior via chat, jangan commit ke repo
+CLOUDFLARE_R2_ACCESS_KEY=dev_access_key_dari_senior
+CLOUDFLARE_R2_SECRET_KEY=dev_secret_key_dari_senior
+CLOUDFLARE_R2_BUCKET=tanaogi-storage-dev
+CLOUDFLARE_R2_ENDPOINT=https://{account_id}.r2.cloudflarestorage.com
+CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.zyy.my.id
+```
+
+**Penting:** credentials ini dishare senior ke developer via chat — **JANGAN commit ke repo**.
+
+---
+
+## .env untuk Production (Railway)
+
+```env
+FILESYSTEM_DISK=r2
+CLOUDFLARE_R2_BUCKET=tanaogi-storage
+CLOUDFLARE_R2_URL=https://storage.tanaogi.zyy.my.id
+```
+
+Gunakan credentials terpisah dari dev (buat API token berbeda di Cloudflare).
 
 ---
 
@@ -72,24 +103,6 @@ composer require league/flysystem-aws-s3-v3
 ],
 
 'default' => env('FILESYSTEM_DISK', 'r2'),
-```
-
-### Environment Variables
-
-`.env`:
-```env
-FILESYSTEM_DISK=r2
-
-CLOUDFLARE_R2_ACCESS_KEY=your_access_key_id
-CLOUDFLARE_R2_SECRET_KEY=your_secret_access_key
-CLOUDFLARE_R2_BUCKET=tanaogi-storage
-CLOUDFLARE_R2_ENDPOINT=https://{account_id}.r2.cloudflarestorage.com
-CLOUDFLARE_R2_URL=https://storage.tanaogi.com
-```
-
-Jika tidak pakai custom domain, `CLOUDFLARE_R2_URL` pakai endpoint publik R2:
-```env
-CLOUDFLARE_R2_URL=https://pub-{hash}.r2.dev
 ```
 
 ---
@@ -144,13 +157,26 @@ public function deleteImage(string $imageId): bool
 ## Struktur Path di R2
 
 ```
-tanaogi-storage/
+tanaogi-storage-dev/          ← development
 └── destinations/
     └── {destination_id}/
         ├── {uuid}.jpg
+        └── {uuid}.png
+
+tanaogi-storage/              ← production
+└── destinations/
+    └── {destination_id}/
         ├── {uuid}.jpg
         └── {uuid}.png
 ```
+
+---
+
+## Membersihkan Dev Bucket
+
+Sesekali hapus foto dummy di dev bucket:
+- Login Cloudflare Dashboard → R2 → `tanaogi-storage-dev`
+- Hapus folder `destinations/` yang tidak dipakai
 
 ---
 
@@ -190,8 +216,8 @@ Frontend langsung pakai URL ini untuk tampilkan foto — tidak perlu generate ul
   "id": "uuid",
   "name": "Pantai Tanjung Bira",
   "images": [
-    "https://storage.tanaogi.com/destinations/uuid/foto1.jpg",
-    "https://storage.tanaogi.com/destinations/uuid/foto2.jpg"
+    "https://dev-storage.tanaogi.zyy.my.id/destinations/uuid/foto1.jpg",
+    "https://dev-storage.tanaogi.zyy.my.id/destinations/uuid/foto2.jpg"
   ]
 }
 ```
@@ -208,38 +234,3 @@ Frontend langsung pakai URL ini untuk tampilkan foto — tidak perlu generate ul
 | Egress (bandwidth) | Gratis | Gratis |
 
 Untuk TanaOgi skala awal, free tier lebih dari cukup.
-
----
-
-## Testing Upload Lokal
-
-Untuk development lokal, bisa pakai disk `local` agar tidak perlu koneksi R2:
-
-`.env.local` (override untuk dev):
-```env
-FILESYSTEM_DISK=local
-```
-
-Atau pakai **MinIO** (R2-compatible, bisa dijalankan via Docker):
-```yaml
-# tambahkan ke docker-compose.yml
-minio:
-  image: minio/minio
-  ports:
-    - "9000:9000"
-    - "9001:9001"
-  environment:
-    MINIO_ROOT_USER: tanaogi
-    MINIO_ROOT_PASSWORD: password
-  command: server /data --console-address ":9001"
-```
-
-```env
-# .env untuk dev dengan MinIO
-FILESYSTEM_DISK=r2
-CLOUDFLARE_R2_ACCESS_KEY=tanaogi
-CLOUDFLARE_R2_SECRET_KEY=password
-CLOUDFLARE_R2_BUCKET=tanaogi-storage
-CLOUDFLARE_R2_ENDPOINT=http://minio:9000
-CLOUDFLARE_R2_URL=http://localhost:9000/tanaogi-storage
-```

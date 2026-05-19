@@ -17,7 +17,7 @@ Untuk progress tracker lihat `docs/TASKS.md`.
 **Yang harus dibuat:**
 
 - `Dockerfile` — PHP 8.3-fpm, non-root www-data user
-- `docker-compose.yml` — 4 services: app (PHP-FPM), nginx, mysql:8.0, minio
+- `docker-compose.yml` — 3 services: app (PHP-FPM), nginx, mysql:8.0 (tidak ada MinIO — dev langsung ke R2)
 - `docker/nginx/default.conf` — client_max_body_size 20M, PHP-FPM upstream ke app:9000
 - `.env.example` — semua variable dari CLAUDE.md tanpa nilai sensitif
 - `routes/api.php` — load api_v1.php dengan prefix v1
@@ -266,7 +266,7 @@ AppServiceProvider:
 
 **Branch:** `feat/task-010-destinations-crud`
 
-**Tujuan:** CRUD destinasi wisata dengan upload foto ke R2/MinIO.
+**Tujuan:** CRUD destinasi wisata dengan upload foto langsung ke R2 Cloudflare (dev bucket: `tanaogi-storage-dev`).
 
 **Yang harus dibuat:**
 
@@ -286,6 +286,8 @@ AppServiceProvider:
 - URL publik via `Storage::disk('r2')->url(path)`
 - Simpan path + url ke tabel `destination_images`
 - Saat hapus: `Storage::disk('r2')->delete(image->path)` lalu hapus record DB
+- Dev: foto masuk ke `tanaogi-storage-dev` bucket
+- Tidak ada MinIO — semua developer langsung ke R2
 
 **Routes:**
 - `GET /destinations` — public (filter ?regency_id)

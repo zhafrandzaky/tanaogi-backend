@@ -11,8 +11,8 @@ Tidak ada MinIO. Tidak ada local disk. Semua developer langsung ke R2.
 
 | Bucket | Dipakai Oleh | Domain |
 |---|---|---|
-| `tanaogi-storage-dev` | Semua developer (lokal) | `dev-storage.tanaogi.com` |
-| `tanaogi-storage` | Production (Railway) | `storage.tanaogi.com` |
+| `tanaogi-storage-dev` | Semua developer (lokal) | `dev-storage.tanaogi.zyy.my.id` |
+| `tanaogi-storage` | Production (Railway) | `storage.tanaogi.zyy.my.id` |
 
 ---
 
@@ -38,8 +38,8 @@ Tidak ada MinIO. Tidak ada local disk. Semua developer langsung ke R2.
    - Scope: kedua bucket
    - Salin: `Access Key ID`, `Secret Access Key`, `Endpoint URL`
 4. Setup custom domain:
-   - `dev-storage.tanaogi.com` → bucket `tanaogi-storage-dev`
-   - `storage.tanaogi.com` → bucket `tanaogi-storage`
+   - `dev-storage.tanaogi.zyy.my.id` → bucket `tanaogi-storage-dev`
+   - `storage.tanaogi.zyy.my.id` → bucket `tanaogi-storage`
    - Set DNS CNAME di Cloudflare domain
 
 ---
@@ -54,7 +54,7 @@ CLOUDFLARE_R2_ACCESS_KEY=dev_access_key_dari_senior
 CLOUDFLARE_R2_SECRET_KEY=dev_secret_key_dari_senior
 CLOUDFLARE_R2_BUCKET=tanaogi-storage-dev
 CLOUDFLARE_R2_ENDPOINT=https://{account_id}.r2.cloudflarestorage.com
-CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.com
+CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.zyy.my.id
 ```
 
 **Penting:** credentials ini dishare senior ke developer via chat — **JANGAN commit ke repo**.
@@ -66,7 +66,7 @@ CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.com
 ```env
 FILESYSTEM_DISK=r2
 CLOUDFLARE_R2_BUCKET=tanaogi-storage
-CLOUDFLARE_R2_URL=https://storage.tanaogi.com
+CLOUDFLARE_R2_URL=https://storage.tanaogi.zyy.my.id
 ```
 
 Gunakan credentials terpisah dari dev (buat API token berbeda di Cloudflare).
@@ -216,8 +216,8 @@ Frontend langsung pakai URL ini untuk tampilkan foto — tidak perlu generate ul
   "id": "uuid",
   "name": "Pantai Tanjung Bira",
   "images": [
-    "https://dev-storage.tanaogi.com/destinations/uuid/foto1.jpg",
-    "https://dev-storage.tanaogi.com/destinations/uuid/foto2.jpg"
+    "https://dev-storage.tanaogi.zyy.my.id/destinations/uuid/foto1.jpg",
+    "https://dev-storage.tanaogi.zyy.my.id/destinations/uuid/foto2.jpg"
   ]
 }
 ```

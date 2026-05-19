@@ -158,13 +158,13 @@ CLOUDFLARE_R2_ACCESS_KEY=
 CLOUDFLARE_R2_SECRET_KEY=
 CLOUDFLARE_R2_BUCKET=tanaogi-storage-dev
 CLOUDFLARE_R2_ENDPOINT=https://{account_id}.r2.cloudflarestorage.com
-CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.com
+CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.zyy.my.id
 
 FONNTE_TOKEN=your_fonnte_token
 ADMIN_WHATSAPP=628xxxxxxxxxx
 
 MAIL_MAILER=log
-MAIL_FROM_ADDRESS=noreply@tanaogi.com
+MAIL_FROM_ADDRESS=noreply@tanaogi.zyy.my.id
 MAIL_FROM_NAME=TanaOgi
 ```
 

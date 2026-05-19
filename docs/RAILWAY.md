@@ -5,11 +5,11 @@
 ```
 Railway Project: tanaogi
 ├── Service: tanaogi-api     (Laravel app)
-│   └── Domain: api.tanaogi.com
+│   └── Domain: api.tanaogi.zyy.my.id
 └── Service: tanaogi-db      (MySQL 8.0)
 
 Cloudflare R2: tanaogi-storage
-└── Domain: storage.tanaogi.com
+└── Domain: storage.tanaogi.zyy.my.id
 ```
 
 ---
@@ -42,8 +42,8 @@ APP_NAME=TanaOgi
 APP_ENV=production
 APP_KEY=                        ← php artisan key:generate --show
 APP_DEBUG=false
-APP_URL=https://api.tanaogi.com
-FRONTEND_URL=https://tanaogi.com
+APP_URL=https://api.tanaogi.zyy.my.id
+FRONTEND_URL=https://tanaogi.zyy.my.id
 MAINTENANCE_SECRET=rahasia_tanaogi_admin_production
 
 LOG_CHANNEL=stderr
@@ -55,14 +55,14 @@ DB_DATABASE=${{tanaogi-db.MYSQLDATABASE}}
 DB_USERNAME=${{tanaogi-db.MYSQLUSER}}
 DB_PASSWORD=${{tanaogi-db.MYSQLPASSWORD}}
 
-SANCTUM_STATEFUL_DOMAINS=tanaogi.com
+SANCTUM_STATEFUL_DOMAINS=tanaogi.zyy.my.id
 
 FILESYSTEM_DISK=r2
 CLOUDFLARE_R2_ACCESS_KEY=your_r2_access_key
 CLOUDFLARE_R2_SECRET_KEY=your_r2_secret_key
 CLOUDFLARE_R2_BUCKET=tanaogi-storage
 CLOUDFLARE_R2_ENDPOINT=https://{account_id}.r2.cloudflarestorage.com
-CLOUDFLARE_R2_URL=https://storage.tanaogi.com
+CLOUDFLARE_R2_URL=https://storage.tanaogi.zyy.my.id
 
 FONNTE_TOKEN=your_fonnte_token_production
 ADMIN_WHATSAPP=628xxxxxxxxxx
@@ -72,7 +72,7 @@ MAIL_HOST=smtp.resend.com
 MAIL_PORT=465
 MAIL_USERNAME=resend
 MAIL_PASSWORD=your_resend_api_key
-MAIL_FROM_ADDRESS=noreply@tanaogi.com
+MAIL_FROM_ADDRESS=noreply@tanaogi.zyy.my.id
 MAIL_FROM_NAME=TanaOgi
 ```
 
@@ -139,7 +139,7 @@ Route::get('/health', fn() => response()->json([
 ## Custom Domain
 
 1. Service `tanaogi-api` → Settings → Networking → Custom Domain
-2. Tambah: `api.tanaogi.com`
+2. Tambah: `api.tanaogi.zyy.my.id`
 3. Set DNS di Cloudflare:
    ```
    CNAME api → your-app.railway.app
@@ -168,7 +168,7 @@ Atau buat service terpisah di Railway khusus scheduler.
 1. Buka https://dash.cloudflare.com → R2 Object Storage
 2. Buat bucket: `tanaogi-storage`
 3. Buat API Token dengan permission Object Read & Write
-4. Setup custom domain `storage.tanaogi.com` di bucket settings
+4. Setup custom domain `storage.tanaogi.zyy.my.id` di bucket settings
 5. Isi env vars R2 di Railway
 
 Detail lengkap di `docs/STORAGE.md`.

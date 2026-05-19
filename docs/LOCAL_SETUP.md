@@ -75,7 +75,7 @@ CLOUDFLARE_R2_ACCESS_KEY=
 CLOUDFLARE_R2_SECRET_KEY=
 CLOUDFLARE_R2_BUCKET=tanaogi-storage-dev
 CLOUDFLARE_R2_ENDPOINT=
-CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.com
+CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.zyy.my.id
 ```
 
 > **Catatan:** kosongkan dulu `CLOUDFLARE_R2_ACCESS_KEY`, `SECRET_KEY`, dan `ENDPOINT` — minta dari senior sebelum test fitur upload foto.
@@ -151,7 +151,7 @@ CLOUDFLARE_R2_ACCESS_KEY=
 CLOUDFLARE_R2_SECRET_KEY=
 CLOUDFLARE_R2_BUCKET=tanaogi-storage-dev
 CLOUDFLARE_R2_ENDPOINT=
-CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.com
+CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.zyy.my.id
 ```
 
 > **Catatan:** default XAMPP username `root` dengan password kosong.

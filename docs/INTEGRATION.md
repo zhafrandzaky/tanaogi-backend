@@ -8,7 +8,7 @@ Dokumen ini adalah "kontrak" antara backend dan frontend. Frontend mengkonsumsi 
 
 ```
 Local      : http://localhost:8000/api/v1
-Production : https://api.tanaogi.com/api/v1
+Production : https://api.tanaogi.zyy.my.id/api/v1
 ```
 
 ---
@@ -73,8 +73,8 @@ Response `GET /destinations/{slug}` menyertakan array URL foto dari R2:
     "latitude": -5.6103,
     "longitude": 120.4586,
     "images": [
-      "https://storage.tanaogi.com/destinations/uuid/foto1.jpg",
-      "https://storage.tanaogi.com/destinations/uuid/foto2.jpg"
+      "https://storage.tanaogi.zyy.my.id/destinations/uuid/foto1.jpg",
+      "https://storage.tanaogi.zyy.my.id/destinations/uuid/foto2.jpg"
     ],
     "regency": { "id": "uuid", "name": "Bulukumba" }
   }
@@ -129,12 +129,12 @@ Response upload:
   "data": [
     {
       "id": "uuid",
-      "url": "https://storage.tanaogi.com/destinations/uuid/abc.jpg",
+      "url": "https://storage.tanaogi.zyy.my.id/destinations/uuid/abc.jpg",
       "order": 0
     },
     {
       "id": "uuid",
-      "url": "https://storage.tanaogi.com/destinations/uuid/def.jpg",
+      "url": "https://storage.tanaogi.zyy.my.id/destinations/uuid/def.jpg",
       "order": 1
     }
   ]

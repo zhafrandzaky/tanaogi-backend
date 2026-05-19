@@ -131,7 +131,7 @@ tanaogi-backend/
 
 ```
 Local      : http://localhost:8000/api/v1
-Production : https://api.tanaogi.com/api/v1
+Production : https://api.tanaogi.zyy.my.id/api/v1
 ```
 
 ### Endpoint Utama

@@ -89,7 +89,7 @@ destination_id CHAR(36) FK → destinations.id
 path           VARCHAR(500) NOT NULL
                -- path di R2: "destinations/{destination_id}/{uuid}.jpg"
 url            VARCHAR(500) NOT NULL
-               -- URL publik R2: "https://storage.tanaogi.com/destinations/..."
+               -- URL publik R2: "https://storage.tanaogi.zyy.my.id/destinations/..."
 order          INTEGER DEFAULT 0
                -- urutan tampil foto (0 = thumbnail utama)
 created_at     TIMESTAMP

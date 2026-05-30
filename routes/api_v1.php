@@ -10,20 +10,13 @@ use App\Http\Controllers\Api\V1\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', fn () => response()->json([
-    'success' => true,
-    'message' => 'TanaOgi API is running',
-    'data'    => null,
+    'status'  => 'ok',
+    'service' => 'TanaOgi API',
 ]));
 
 // Auth
-Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
-        Route::get('/me', [AuthController::class, 'me']);
-    });
-});
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/auth/logout', [AuthController::class, 'logout']);
 
 // Public endpoints
 Route::get('/regencies', [RegencyController::class, 'index']);

@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
-  <img src="https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white" />
+  <img src="https://img.shields.io/badge/PHP-8.4+-777BB4?style=for-the-badge&logo=php&logoColor=white" />
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white" />
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
   <img src="https://img.shields.io/badge/Deployed%20on-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" />
@@ -18,7 +18,7 @@ Repo ini adalah backend only. Frontend berada di repo terpisah.
 | Layer | Teknologi |
 |---|---|
 | Framework | Laravel 13 |
-| Language | PHP 8.3+ |
+| Language | PHP 8.4+ |
 | Database | MySQL 8.0 |
 | Auth | Laravel Sanctum |
 | Role & Permission | Spatie Laravel Permission |

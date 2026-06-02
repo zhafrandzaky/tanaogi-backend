@@ -44,7 +44,7 @@ Prompt lengkap per task ada di ~/tanaogi-workspace/PROMPTS.md.
 
 ## PHASE 7 — Scheduler & Notifications
 
-- [ ] TASK-020 `feat/task-020-whatsapp-service` — WhatsApp Service via Fonnte
+- [ ] TASK-020 `feat/task-020-whatsapp-service` — WhatsApp Service via WaAPI
 - [ ] TASK-021 `feat/task-021-scheduler-reminder` — Scheduler Reminder Driver
 
 ## PHASE 8 — Polish & Deploy

@@ -254,7 +254,7 @@ public function checkAndLogPhone(string $phone, string $endpoint): void
 
 | Method | Parameter | Return | Deskripsi |
 |---|---|---|---|
-| `send(string $phone, string $message)` | nomor, pesan | `bool` | Kirim WA via Fonnte |
+| `send(string $phone, string $message)` | nomor, pesan | `bool` | Kirim WA via WaAPI |
 | `sendReminderToDriver(DriverOrder $order)` | order | `bool` | Kirim reminder ke driver |
 
 ---

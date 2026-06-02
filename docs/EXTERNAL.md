@@ -1,6 +1,6 @@
 # EXTERNAL.md — Integrasi Eksternal TanaOgi
 
-TanaOgi hanya menggunakan 2 integrasi eksternal: Google Maps (deeplink) dan WhatsApp (deeplink + Fonnte API untuk reminder).
+TanaOgi hanya menggunakan 2 integrasi eksternal: Google Maps (deeplink) dan WhatsApp (deeplink + WaAPI untuk reminder).
 
 ---
 
@@ -112,92 +112,53 @@ window.open(waUrl, '_blank');
 
 ---
 
-## 3. Fonnte API (Reminder ke Driver)
+## 3. WaAPI (Reminder ke Driver)
 
-Digunakan oleh **Laravel Scheduler** untuk kirim reminder otomatis ke nomor WA driver.
+Digunakan oleh Laravel Scheduler untuk kirim reminder otomatis ke nomor WA driver.
 
-**Ini satu-satunya API berbayar** — ~Rp100-150rb/bulan.
+### Endpoint
+POST https://waapi.fyas.my.id/api/whatsapp/send-message
 
-### Setup Fonnte
+### Auth
+Header: X-API-Key: {WAAPI_KEY}
 
-1. Daftar di https://fonnte.com
-2. Sambungkan nomor WA admin/bisnis TanaOgi
-3. Salin API Token
-4. Set di `.env`:
-```env
-FONNTE_TOKEN=your_fonnte_token_here
-```
-
-### Cara Kirim Pesan via Fonnte
-
-```php
-// app/Services/WhatsappService.php
-
-public function send(string $phone, string $message): bool
+### Request Body
+```json
 {
-    try {
-        $response = Http::withHeaders([
-            'Authorization' => config('services.fonnte.token'),
-        ])->post('https://api.fonnte.com/send', [
-            'target'  => $phone,   // format: 628xxx (tanpa +)
-            'message' => $message,
-        ]);
-
-        return $response->successful();
-    } catch (\Exception $e) {
-        Log::error('Fonnte API error: ' . $e->getMessage());
-        return false;
-    }
+  "number": "628xxx",
+  "message": "teks pesan"
 }
 ```
 
-`config/services.php`:
+### Rate Limit
+1 pesan per 30 detik per API key.
+Scheduler harus mempertimbangkan delay antar pengiriman jika ada banyak reminder sekaligus.
+
+### Setup
+1. Daftar di https://waapi.fyas.my.id/dashboard
+2. Dapatkan API key
+3. Pastikan device WhatsApp sudah terpasang (scan QR)
+4. Set di `.env`:
+```env
+WAAPI_URL=https://waapi.fyas.my.id
+WAAPI_KEY=wapi_your_key_here
+```
+
+### Cara Kirim via Laravel (Http facade)
 ```php
-'fonnte' => [
-    'token' => env('FONNTE_TOKEN'),
-],
+Http::withHeaders([
+    'Content-Type' => 'application/json',
+    'X-API-Key'    => config('services.waapi.key'),
+])->post(config('services.waapi.url') . '/api/whatsapp/send-message', [
+    'number'  => $phone,
+    'message' => $message,
+]);
 ```
 
-### Format Pesan Reminder ke Driver
-
-**One-day trip** (beberapa jam sebelum penjemputan):
-```
-Reminder TanaOgi 🔔
-
-Kamu perlu menjemput penumpang hari ini:
-
-👤 Nama    : Budi Santoso
-📌 Lokasi  : Pantai Tanjung Bira
-📞 No HP   : 08123456789
-
-Pastikan hadir tepat waktu ya!
-```
-
-**PP / Menginap** (H-1 sebelum tanggal pulang):
-```
-Reminder TanaOgi 🔔
-
-Besok kamu perlu menjemput penumpang:
-
-👤 Nama    : Budi Santoso
-📌 Lokasi  : Hakuna Matata Resort
-             Jl. Poros Bira, Bulukumba
-📅 Tanggal : 22 Juni 2025
-📞 No HP   : 08123456789
-
-Pastikan hadir tepat waktu ya!
-```
-
-### Format Nomor WA Driver
-
-Simpan di tabel `drivers` kolom `phone` dengan format internasional:
+### Format Nomor WA
+Format internasional tanpa `+` dan tanpa `0` di depan:
 ```
 08123456789  →  628123456789
-```
-
-Validasi di FormRequest:
-```php
-'phone' => ['required', 'string', 'regex:/^62[0-9]{9,12}$/'],
 ```
 
 ---
@@ -206,6 +167,6 @@ Validasi di FormRequest:
 
 | Integrasi | Tujuan | Biaya | Butuh API Key |
 |---|---|---|---|
-| Google Maps deeplink | Navigasi user ke destinasi | Gratis | ❌ |
-| WhatsApp deeplink | Pemesanan driver oleh user | Gratis | ❌ |
-| Fonnte API | Reminder otomatis ke driver | ~Rp150rb/bln | ✅ |
+| Google Maps deeplink | Navigasi user ke destinasi | Gratis | Tidak |
+| WhatsApp deeplink | Pemesanan driver oleh user | Gratis | Tidak |
+| WaAPI | Reminder otomatis ke driver | Gratis (self-hosted) | Ya |

@@ -1,0 +1,1302 @@
+{
+  "info": {
+    "_postman_id": "f1a2b3c4-d5e6-7890-abcd-ef0123456789",
+    "name": "TanaOgi API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set(\"token\", json.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@tanaogi.zyy.my.id\",\n    \"password\": \"password\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+            },
+            "method": "POST",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Public",
+      "item": [
+        {
+          "name": "Get Regencies",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/regencies",
+              "host": ["{{base_url}}"],
+              "path": ["regencies"]
+            }
+          }
+        },
+        {
+          "name": "Get Destinations",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/destinations",
+              "host": ["{{base_url}}"],
+              "path": ["destinations"]
+            }
+          }
+        },
+        {
+          "name": "Get Destinations by Regency",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/destinations?regency_id={{regency_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["destinations"],
+              "query": [{"key": "regency_id", "value": "{{regency_id}}"}]
+            }
+          }
+        },
+        {
+          "name": "Get Destination Detail",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/destinations/:slug",
+              "host": ["{{base_url}}"],
+              "path": ["destinations", ":slug"],
+              "variable": [{"key": "slug", "value": "pantai-tanjung-bira"}]
+            }
+          }
+        },
+        {
+          "name": "Get Destination Accommodations",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/destinations/:slug/accommodations",
+              "host": ["{{base_url}}"],
+              "path": ["destinations", ":slug", "accommodations"],
+              "variable": [{"key": "slug", "value": "pantai-tanjung-bira"}]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/vehicles",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Get WhatsApp Settings",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/settings/whatsapp",
+              "host": ["{{base_url}}"],
+              "path": ["settings", "whatsapp"]
+            }
+          }
+        },
+        {
+          "name": "Get Maintenance Status",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/maintenance/status",
+              "host": ["{{base_url}}"],
+              "path": ["maintenance", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Admin — Regencies",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Regencies",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/regencies",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "regencies"]
+            }
+          }
+        },
+        {
+          "name": "Create Regency",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Bulukumba\",\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/regencies",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "regencies"]
+            }
+          }
+        },
+        {
+          "name": "Get Regency",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/regencies/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "regencies", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Update Regency",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Bulukumba\",\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/regencies/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "regencies", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Regency",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/regencies/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "regencies", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active Regency",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/regencies/:id/toggle-active",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "regencies", ":id", "toggle-active"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Admin — Destinations",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Destinations",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/destinations",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "destinations"]
+            }
+          }
+        },
+        {
+          "name": "Create Destination",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"regency_id\": \"{{regency_id}}\",\n    \"name\": \"Pantai Tanjung Bira\",\n    \"description\": \"Pantai pasir putih dengan air biru jernih di ujung selatan Sulawesi Selatan.\",\n    \"ticket_price\": 25000,\n    \"facilities\": [\"Toilet\", \"Parkir\", \"Warung Makan\", \"Area Snorkeling\"],\n    \"route_text\": \"Dari Makassar ke arah selatan via Trans Sulawesi, sekitar 3,5 jam perjalanan menuju Kecamatan Bonto Bahari, Bulukumba.\",\n    \"latitude\": -5.6103,\n    \"longitude\": 120.4586,\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/destinations",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "destinations"]
+            }
+          }
+        },
+        {
+          "name": "Get Destination",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/destinations/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "destinations", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Update Destination",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"regency_id\": \"{{regency_id}}\",\n    \"name\": \"Pantai Tanjung Bira\",\n    \"description\": \"Pantai pasir putih dengan air biru jernih di ujung selatan Sulawesi Selatan.\",\n    \"ticket_price\": 25000,\n    \"facilities\": [\"Toilet\", \"Parkir\", \"Warung Makan\", \"Area Snorkeling\"],\n    \"route_text\": \"Dari Makassar ke arah selatan via Trans Sulawesi, sekitar 3,5 jam perjalanan menuju Kecamatan Bonto Bahari, Bulukumba.\",\n    \"latitude\": -5.6103,\n    \"longitude\": 120.4586,\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/destinations/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "destinations", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Destination",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/destinations/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "destinations", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active Destination",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/destinations/:id/toggle-active",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "destinations", ":id", "toggle-active"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Upload Destination Images",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {"key": "images[]", "type": "file", "src": []}
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/destinations/:id/images",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "destinations", ":id", "images"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Destination Image",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/destinations/:id/images/:imageId",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "destinations", ":id", "images", ":imageId"],
+              "variable": [
+                {"key": "id", "value": ""},
+                {"key": "imageId", "value": ""}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Admin — Vehicles",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/vehicles",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Create Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"car\",\n    \"name\": \"Toyota Avanza\",\n    \"price_per_day\": 500000,\n    \"description\": \"Mobil keluarga nyaman untuk perjalanan wisata\",\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/vehicles",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicle",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/vehicles/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "vehicles", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Update Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"car\",\n    \"name\": \"Toyota Avanza\",\n    \"price_per_day\": 500000,\n    \"description\": \"Mobil keluarga nyaman untuk perjalanan wisata\",\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/vehicles/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "vehicles", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/vehicles/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "vehicles", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active Vehicle",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/vehicles/:id/toggle-active",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "vehicles", ":id", "toggle-active"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Admin — Accommodations",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Accommodations",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/accommodations",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "accommodations"]
+            }
+          }
+        },
+        {
+          "name": "Create Accommodation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"destination_id\": \"DESTINATION_UUID\",\n    \"name\": \"Hakuna Matata Resort\",\n    \"type\": \"resort\",\n    \"price_per_night\": 450000,\n    \"address\": \"Jl. Poros Bira, Kec. Bonto Bahari, Bulukumba\",\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/accommodations",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "accommodations"]
+            }
+          }
+        },
+        {
+          "name": "Get Accommodation",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/accommodations/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "accommodations", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Update Accommodation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"destination_id\": \"DESTINATION_UUID\",\n    \"name\": \"Hakuna Matata Resort\",\n    \"type\": \"resort\",\n    \"price_per_night\": 450000,\n    \"address\": \"Jl. Poros Bira, Kec. Bonto Bahari, Bulukumba\",\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/accommodations/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "accommodations", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Accommodation",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/accommodations/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "accommodations", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active Accommodation",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/accommodations/:id/toggle-active",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "accommodations", ":id", "toggle-active"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Admin — Drivers",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Drivers",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "drivers"]
+            }
+          }
+        },
+        {
+          "name": "Create Driver",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Ahmad Syaifuddin\",\n    \"phone\": \"628123456789\",\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/drivers",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "drivers"]
+            }
+          }
+        },
+        {
+          "name": "Get Driver",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "drivers", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Update Driver",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Ahmad Syaifuddin\",\n    \"phone\": \"628123456789\",\n    \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "drivers", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Driver",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "drivers", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active Driver",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/:id/toggle-active",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "drivers", ":id", "toggle-active"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Get Driver Schedule",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/:id/schedule?month=6&year=2025",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "drivers", ":id", "schedule"],
+              "query": [
+                {"key": "month", "value": "6"},
+                {"key": "year", "value": "2025"}
+              ],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Admin — Driver Orders",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Driver Orders",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders"]
+            }
+          }
+        },
+        {
+          "name": "List Driver Orders (filter status)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders?status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders"],
+              "query": [{"key": "status", "value": "pending"}]
+            }
+          }
+        },
+        {
+          "name": "Create Driver Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"destination_id\": \"DESTINATION_UUID\",\n    \"vehicle_id\": \"VEHICLE_UUID\",\n    \"accommodation_id\": null,\n    \"user_name\": \"Budi Santoso\",\n    \"user_phone\": \"08123456789\",\n    \"departure_date\": \"2025-06-20\",\n    \"return_date\": \"2025-06-22\",\n    \"is_overnight\": true,\n    \"pickup_location\": \"Hakuna Matata Resort, Jl. Poros Bira\",\n    \"notes\": \"catatan tambahan\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Driver Order",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Update Driver Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"driver_id\": \"DRIVER_UUID\",\n    \"status\": \"confirmed\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Driver Order",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Admin — Users",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Admin TanaOgi\",\n    \"email\": \"admin@tanaogi.zyy.my.id\",\n    \"password\": \"password\",\n    \"role\": \"admin\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Admin TanaOgi\",\n    \"email\": \"admin@tanaogi.zyy.my.id\",\n    \"password\": \"password\",\n    \"role\": \"admin\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Admin — Settings",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "Get Settings",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/settings",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "settings"]
+            }
+          }
+        },
+        {
+          "name": "Update Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"admin_whatsapp\": \"628123456789\",\n    \"wa_template\": \"Halo Admin TanaOgi, saya ingin memesan kendaraan...\",\n    \"reminder_hours_before_pickup\": 3,\n    \"max_requests_per_minute\": 60,\n    \"max_orders_per_phone\": 3,\n    \"orders_window_hours\": 24,\n    \"auto_ban_enabled\": true,\n    \"auto_ban_duration_minutes\": 60\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/settings",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "settings"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Admin — Maintenance",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "Get Maintenance Status",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/maintenance/status",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "maintenance", "status"]
+            }
+          }
+        },
+        {
+          "name": "Enable Maintenance",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/maintenance/enable",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "maintenance", "enable"]
+            }
+          }
+        },
+        {
+          "name": "Disable Maintenance",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/maintenance/disable",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "maintenance", "disable"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Admin — Blacklist IP",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Blacklist IPs",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/ips",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "ips"]
+            }
+          }
+        },
+        {
+          "name": "Add Blacklist IP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ip_address\": \"192.168.1.1\",\n    \"reason\": \"Spam request\",\n    \"duration_minutes\": 60\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/ips",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "ips"]
+            }
+          }
+        },
+        {
+          "name": "Get Blacklist IP",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/ips/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "ips", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Blacklist IP",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/ips/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "ips", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Unban Blacklist IP",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/ips/:id/unban",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "ips", ":id", "unban"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "14. Admin — Whitelist IP",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Whitelist IPs",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/whitelist/ips",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "whitelist", "ips"]
+            }
+          }
+        },
+        {
+          "name": "Add Whitelist IP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ip_address\": \"192.168.1.100\",\n    \"note\": \"IP kantor admin\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/whitelist/ips",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "whitelist", "ips"]
+            }
+          }
+        },
+        {
+          "name": "Delete Whitelist IP",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/whitelist/ips/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "whitelist", "ips", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "15. Admin — Blacklist Phone",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Blacklist Phones",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/phones",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "phones"]
+            }
+          }
+        },
+        {
+          "name": "Add Blacklist Phone",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"628123456789\",\n    \"reason\": \"Spam order\",\n    \"duration_minutes\": 1440\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/phones",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "phones"]
+            }
+          }
+        },
+        {
+          "name": "Get Blacklist Phone",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/phones/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "phones", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Delete Blacklist Phone",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/phones/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "phones", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Unban Blacklist Phone",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/blacklist/phones/:id/unban",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "blacklist", "phones", ":id", "unban"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "16. Admin — Whitelist Phone",
+      "auth": {
+        "type": "bearer",
+        "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
+      },
+      "item": [
+        {
+          "name": "List Whitelist Phones",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/whitelist/phones",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "whitelist", "phones"]
+            }
+          }
+        },
+        {
+          "name": "Add Whitelist Phone",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"628123456789\",\n    \"note\": \"Nomor WA tim internal\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/whitelist/phones",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "whitelist", "phones"]
+            }
+          }
+        },
+        {
+          "name": "Delete Whitelist Phone",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/whitelist/phones/:id",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "whitelist", "phones", ":id"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "regency_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

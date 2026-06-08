@@ -34,6 +34,8 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     // Destinations
     Route::apiResource('destinations', Admin\DestinationController::class);
     Route::patch('destinations/{id}/toggle-active', [Admin\DestinationController::class, 'toggleActive']);
+    Route::post('destinations/{id}/images', [Admin\DestinationController::class, 'uploadImages']);
+    Route::delete('destinations/{id}/images/{imageId}', [Admin\DestinationController::class, 'deleteImage']);
 
     // Vehicles
     Route::apiResource('vehicles', Admin\VehicleController::class);

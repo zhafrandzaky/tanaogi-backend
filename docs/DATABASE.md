@@ -359,6 +359,7 @@ DriverOrder   belongsTo  Accommodation (nullable)
 
 ```
 RegencySeeder       → 24 kabupaten/kota Sulawesi Selatan
+DestinationSeeder   → 6 sample destinasi wisata Sulawesi Selatan
 VehicleSeeder       → Mobil (Avanza/Innova), Bus Pariwisata
 SettingSeeder       → semua default settings
 AdminUserSeeder     → 1 akun admin default

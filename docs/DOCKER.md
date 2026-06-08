@@ -160,10 +160,15 @@ CLOUDFLARE_R2_BUCKET=tanaogi-storage-dev
 CLOUDFLARE_R2_ENDPOINT=https://{account_id}.r2.cloudflarestorage.com
 CLOUDFLARE_R2_URL=https://dev-storage.tanaogi.zyy.my.id
 
-FONNTE_TOKEN=your_fonnte_token
 ADMIN_WHATSAPP=628xxxxxxxxxx
+WAAPI_URL=https://waapi.fyas.my.id
+WAAPI_KEY=wapi_your_key_here
 
-MAIL_MAILER=log
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
 MAIL_FROM_ADDRESS=noreply@tanaogi.zyy.my.id
 MAIL_FROM_NAME=TanaOgi
 ```

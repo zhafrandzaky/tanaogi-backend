@@ -7,19 +7,19 @@ Prompt lengkap per task ada di ~/tanaogi-workspace/PROMPTS.md.
 
 ## PHASE 1 — Project Setup
 
-- [ ] TASK-001 `feat/task-001-laravel-init` — Laravel Init + Docker
-- [ ] TASK-002 `feat/task-002-env-packages` — Environment & Packages
-- [ ] TASK-003 `feat/task-003-folder-structure` — Folder Structure & Base Classes
+- [x] TASK-001 `feat/task-001-laravel-init` — Laravel Init + Docker
+- [x] TASK-002 `feat/task-002-env-packages` — Environment & Packages
+- [x] TASK-003 `feat/task-003-folder-structure` — Folder Structure & Base Classes
 
 ## PHASE 2 — Database & Models
 
-- [ ] TASK-004 `feat/task-004-core-migrations` — Core Migrations & Seeders
-- [ ] TASK-005 `feat/task-005-blacklist-migrations` — Blacklist Migrations
-- [ ] TASK-006 `feat/task-006-eloquent-models` — Eloquent Models
+- [x] TASK-004 `feat/task-004-core-migrations` — Core Migrations & Seeders
+- [x] TASK-005 `feat/task-005-blacklist-migrations` — Blacklist Migrations
+- [x] TASK-006 `feat/task-006-eloquent-models` — Eloquent Models
 
 ## PHASE 3 — Auth & Middleware
 
-- [ ] TASK-007 `feat/task-007-authentication` — Authentication
+- [x] TASK-007 `feat/task-007-authentication` — Authentication
 - [ ] TASK-008 `feat/task-008-security-middleware` — Security Middleware Stack
 
 ## PHASE 4 — Core Features

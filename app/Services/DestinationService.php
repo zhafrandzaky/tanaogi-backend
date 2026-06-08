@@ -6,6 +6,7 @@ use App\Models\Destination;
 use App\Models\DestinationImage;
 use App\Repositories\Contracts\DestinationRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -87,7 +88,7 @@ class DestinationService
         ]);
     }
 
-    public function uploadImages(string $id, array $files): Collection
+    public function uploadImages(string $id, array $files): SupportCollection
     {
         $destination = $this->findById($id);
         $uploaded = collect();
@@ -118,7 +119,11 @@ class DestinationService
 
         $image = DestinationImage::findOrFail($imageId);
 
-        Storage::disk('r2')->delete($image->path);
+        try {
+            Storage::disk('r2')->delete($image->path);
+        } catch (\Throwable $e) {
+            // best-effort: R2 orphan is acceptable, proceed to remove DB record
+        }
 
         return $image->delete();
     }

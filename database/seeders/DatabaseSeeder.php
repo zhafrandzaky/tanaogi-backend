@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminUserSeeder::class,
             RegencySeeder::class,
+            DestinationSeeder::class,
             VehicleSeeder::class,
             SettingSeeder::class,
         ]);

@@ -12,6 +12,7 @@ services:
       - tanaogi_network
     depends_on:
       - mysql
+      - mailpit
     environment:
       - APP_ENV=local
 
@@ -45,6 +46,16 @@ services:
     networks:
       - tanaogi_network
     command: --default-authentication-plugin=mysql_native_password
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: tanaogi_mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - tanaogi_network
 
 networks:
   tanaogi_network:

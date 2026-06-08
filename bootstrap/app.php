@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\CheckBlacklistIp;
+use App\Http\Middleware\CheckMaintenance;
+use App\Http\Middleware\RateLimitAndLog;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,7 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->prepend(CheckMaintenance::class);
+
+        $middleware->appendToGroup('api', [
+            CheckBlacklistIp::class,
+            RateLimitAndLog::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

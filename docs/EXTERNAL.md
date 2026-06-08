@@ -130,19 +130,28 @@ Header: X-API-Key: {WAAPI_KEY}
 }
 ```
 
+### Response
+```json
+{ "success": true }
+```
+atau jika gagal:
+```json
+{ "success": false, "error": "pesan error" }
+```
+
 ### Rate Limit
 1 pesan per 30 detik per API key.
-Scheduler harus mempertimbangkan delay antar pengiriman jika ada banyak reminder sekaligus.
+Jika melewati batas, request akan ditolak sementara.
+Scheduler harus mempertimbangkan delay antar pengiriman — gunakan sleep(1) jika kirim banyak reminder sekaligus.
+Jaga kerahasiaan API key.
 
 ### Setup
-1. Daftar di https://waapi.fyas.my.id/dashboard
-2. Dapatkan API key
-3. Pastikan device WhatsApp sudah terpasang (scan QR)
-4. Set di `.env`:
-```env
+1. Daftar di https://waapi.fyas.my.id/dashboard — dapatkan API key
+2. Hubungkan device WhatsApp: Settings → Linked Devices → Link a Device → scan QR
+3. Pastikan status koneksi aktif sebelum scheduler berjalan
+4. Set di .env:
 WAAPI_URL=https://waapi.fyas.my.id
 WAAPI_KEY=wapi_your_key_here
-```
 
 ### Cara Kirim via Laravel (Http facade)
 ```php
@@ -155,11 +164,15 @@ Http::withHeaders([
 ]);
 ```
 
+### Endpoint Lain (tersedia tapi tidak dipakai backend)
+- GET  /api/whatsapp/status  — cek status koneksi device
+- GET  /api/whatsapp/qr      — ambil QR code untuk link device
+- POST /api/whatsapp/send-image — kirim gambar (number, imageUrl, caption)
+- POST /api/whatsapp/send-group-message — kirim ke grup (groupId, message)
+
 ### Format Nomor WA
-Format internasional tanpa `+` dan tanpa `0` di depan:
-```
+Format internasional tanpa + dan tanpa 0 di depan:
 08123456789  →  628123456789
-```
 
 ---
 

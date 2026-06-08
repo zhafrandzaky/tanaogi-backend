@@ -2,7 +2,7 @@
 
 ## Overview
 
-Laravel Scheduler berjalan setiap menit dan mengecek apakah ada reminder yang perlu dikirim ke driver via WhatsApp (Fonnte API).
+Laravel Scheduler berjalan setiap menit dan mengecek apakah ada reminder yang perlu dikirim ke driver via WhatsApp (WaAPI — https://waapi.fyas.my.id).
 
 Ada 2 jenis reminder:
 

@@ -8,16 +8,16 @@ class MaintenanceService
 
     public function enable(): void
     {
-        $this->settingService->update(['maintenance_mode' => 'true']);
+        $this->settingService->update(['is_maintenance' => 'true']);
     }
 
     public function disable(): void
     {
-        $this->settingService->update(['maintenance_mode' => 'false']);
+        $this->settingService->update(['is_maintenance' => 'false']);
     }
 
     public function isActive(): bool
     {
-        return filter_var($this->settingService->get('maintenance_mode'), FILTER_VALIDATE_BOOLEAN);
+        return filter_var($this->settingService->get('is_maintenance'), FILTER_VALIDATE_BOOLEAN);
     }
 }

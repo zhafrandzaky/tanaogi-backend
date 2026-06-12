@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\DriverScheduleRequest;
 use App\Http\Requests\Admin\StoreDriverRequest;
 use App\Http\Requests\Admin\UpdateDriverRequest;
 use App\Http\Resources\V1\DriverResource;
@@ -10,7 +11,6 @@ use App\Http\Resources\V1\DriverScheduleResource;
 use App\Services\DriverService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class DriverController extends Controller
 {
@@ -78,24 +78,12 @@ class DriverController extends Controller
         );
     }
 
-    public function schedule(Request $request, string $id): JsonResponse
+    public function schedule(DriverScheduleRequest $request, string $id): JsonResponse
     {
-        $request->validate([
-            'month' => ['required', 'integer', 'min:1', 'max:12'],
-            'year'  => ['required', 'integer', 'min:2020', 'max:2100'],
-        ], [
-            'month.required' => 'Bulan wajib diisi',
-            'month.min'      => 'Bulan harus antara 1-12',
-            'month.max'      => 'Bulan harus antara 1-12',
-            'year.required'  => 'Tahun wajib diisi',
-            'year.min'       => 'Tahun tidak valid',
-            'year.max'       => 'Tahun tidak valid',
-        ]);
-
         $schedule = $this->driverService->getSchedule(
             $id,
-            (int) $request->input('month'),
-            (int) $request->input('year')
+            (int) $request->validated('month'),
+            (int) $request->validated('year')
         );
 
         return $this->success(

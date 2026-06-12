@@ -1,6 +1,7 @@
 # TASKS_DETAIL.md — Spesifikasi Teknis Per Task
 
 Dokumen ini mencatat detail teknis setiap task: file yang dibuat, key logic, dan konfigurasi yang diperlukan.
+Untuk prompt Qoder lengkap lihat `.agents/PROMPTS.md`.
 
 ---
 
@@ -15,7 +16,7 @@ Dokumen ini mencatat detail teknis setiap task: file yang dibuat, key logic, dan
 - `docker-compose.yml` — services: app (PHP-FPM), nginx, mysql:8.0
 - `Dockerfile` — non-root www-data user, PHP-FPM
 - `docker/nginx/default.conf` — client_max_body_size 20M, PHP-FPM upstream
-- `.env.example` — semua env variable dari CLAUDE.md (tanpa nilai asli)
+- `.env.example` — semua env variable dari AGENTS.md (tanpa nilai asli)
 - `routes/api.php` — load api_v1.php dengan prefix /api/v1/
 - `routes/api_v1.php` — semua route stubs
 - `app/Http/Controllers/Api/V1/HealthController.php`
@@ -494,7 +495,9 @@ POST   /api/v1/admin/blacklist/ips/{id}/unban   — admin
 
 **Branch:** `feat/task-020-whatsapp-service`
 
-#### Files
+**Tujuan:** Service notifikasi WhatsApp via WaAPI self-hosted.
+
+**Yang harus dibuat:**
 
 - `app/Services/WhatsappService.php`
   - `send(string phone, string message): bool`
@@ -506,24 +509,34 @@ POST   /api/v1/admin/blacklist/ips/{id}/unban   — admin
     - Log error on failure — tidak throw exception
   - `sendReminderToDriver(DriverOrder order): bool`
     - Build message berdasarkan `is_overnight` flag
-    - One-day trip: format tanpa emoji (plain text)
-    - PP/overnight: format tanpa emoji (plain text)
+    - One-day trip format (plain text):
+      Reminder TanaOgi
+      Kamu perlu menjemput penumpang hari ini:
+      Nama    : {user_name}
+      Lokasi  : {pickup_location}
+      No HP   : {user_phone}
+      Pastikan hadir tepat waktu.
+    - PP/Menginap H-1 format (plain text):
+      Reminder TanaOgi
+      Besok kamu perlu menjemput penumpang:
+      Nama    : {user_name}
+      Lokasi  : {pickup_location}
+      Tanggal : {return_date}
+      No HP   : {user_phone}
+      Pastikan hadir tepat waktu.
     - Panggil `send()` dengan `driver->phone`
+- `config/services.php` — tambah:
+  'waapi' => [
+      'url' => env('WAAPI_URL'),
+      'key' => env('WAAPI_KEY'),
+  ],
+- `.env.example` — tambah:
+  WAAPI_URL=https://waapi.fyas.my.id
+  WAAPI_KEY=wapi_your_key_here
 
-#### Config / Env
+**Referensi:** `docs/EXTERNAL.md`, `docs/SERVICES.md`
 
-- `config/services.php`:
-```php
-'waapi' => [
-    'url' => env('WAAPI_URL'),
-    'key' => env('WAAPI_KEY'),
-],
-```
-- `.env.example`:
-```env
-WAAPI_URL=https://waapi.fyas.my.id
-WAAPI_KEY=wapi_your_key_here
-```
+**Commit:** `feat: add WhatsApp notification service via WaAPI`
 
 ---
 

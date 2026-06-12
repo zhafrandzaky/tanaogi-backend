@@ -45,6 +45,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     // Drivers
     Route::apiResource('drivers', Admin\DriverController::class);
     Route::patch('drivers/{id}/toggle-active', [Admin\DriverController::class, 'toggleActive']);
+    Route::get('drivers/{id}/schedule', [Admin\DriverController::class, 'schedule']);
 
     // Driver Orders
     Route::apiResource('driver-orders', Admin\DriverOrderController::class);

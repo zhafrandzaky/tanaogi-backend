@@ -24,6 +24,7 @@ Route::get('/destinations', [DestinationController::class, 'index']);
 Route::get('/destinations/{slug}', [DestinationController::class, 'show']);
 Route::get('/vehicles', [VehicleController::class, 'index']);
 Route::get('/accommodations', [AccommodationController::class, 'index']);
+Route::get('/destinations/{slug}/accommodations', [AccommodationController::class, 'byDestination']);
 
 // Admin endpoints
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {

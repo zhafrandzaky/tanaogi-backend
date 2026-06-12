@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Admin\Blacklist;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\DestinationController;
 use App\Http\Controllers\Api\V1\RegencyController;
+use App\Http\Controllers\Api\V1\SettingController;
 use App\Http\Controllers\Api\V1\VehicleController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,7 @@ Route::get('/destinations/{slug}', [DestinationController::class, 'show']);
 Route::get('/vehicles', [VehicleController::class, 'index']);
 Route::get('/accommodations', [AccommodationController::class, 'index']);
 Route::get('/destinations/{slug}/accommodations', [AccommodationController::class, 'byDestination']);
+Route::get('/settings/whatsapp', [SettingController::class, 'whatsapp']);
 
 // Admin endpoints
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
@@ -62,7 +64,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
 
     // Settings
     Route::get('settings', [Admin\SettingController::class, 'index']);
-    Route::put('settings/{key}', [Admin\SettingController::class, 'update']);
+    Route::put('settings', [Admin\SettingController::class, 'update']);
 
     // Maintenance
     Route::get('maintenance', [Admin\MaintenanceController::class, 'status']);

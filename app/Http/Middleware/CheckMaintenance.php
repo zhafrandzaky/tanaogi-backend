@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Services\MaintenanceService;
 use Closure;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckMaintenance
@@ -18,9 +19,13 @@ class CheckMaintenance
             return $next($request);
         }
 
-        // Admin with token can bypass maintenance
-        if ($request->bearerToken() && $request->user()?->hasRole('admin')) {
-            return $next($request);
+        // Admin bypass — validate token manually (runs before auth:sanctum)
+        $token = $request->bearerToken();
+        if ($token) {
+            $personalAccessToken = PersonalAccessToken::findToken($token);
+            if ($personalAccessToken && $personalAccessToken->tokenable?->hasRole('admin')) {
+                return $next($request);
+            }
         }
 
         // Secret bypass (matches Laravel's --secret option)

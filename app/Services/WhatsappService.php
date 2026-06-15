@@ -21,7 +21,7 @@ class WhatsappService
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'X-API-Key'    => config('services.waapi.key'),
-            ])->post(config('services.waapi.url') . '/api/whatsapp/send-message', [
+            ])->post(config('services.waapi.url') . '/api/whatsapp/send-message-premium', [
                 'number'  => $phone,
                 'message' => $message,
             ]);

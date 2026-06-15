@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Enums\DriverOrderStatus;
 use App\Models\DriverOrder;
 use App\Repositories\Contracts\DriverOrderRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 class DriverOrderRepository implements DriverOrderRepositoryInterface
@@ -62,5 +63,27 @@ class DriverOrderRepository implements DriverOrderRepositoryInterface
     {
         $order->update(['return_reminded' => true]);
         return $order->fresh();
+    }
+
+    public function findPendingOneDayReminders(): Collection
+    {
+        return DriverOrder::query()
+            ->where('is_overnight', false)
+            ->whereDate('return_date', today())
+            ->whereNotNull('driver_id')
+            ->where('return_reminded', false)
+            ->where('status', DriverOrderStatus::CONFIRMED)
+            ->get();
+    }
+
+    public function findPendingOvernightReminders(Carbon $date): Collection
+    {
+        return DriverOrder::query()
+            ->where('is_overnight', true)
+            ->whereDate('return_date', $date)
+            ->whereNotNull('driver_id')
+            ->where('return_reminded', false)
+            ->where('status', DriverOrderStatus::CONFIRMED)
+            ->get();
     }
 }

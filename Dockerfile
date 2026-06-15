@@ -56,10 +56,7 @@ RUN mkdir -p /var/www/storage/framework/views \
     /var/www/bootstrap/cache \
     && chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-RUN composer dump-autoload --optimize \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+RUN composer dump-autoload --optimize
 
 # Nginx config — listen on $PORT (default 8080), proxy PHP to local php-fpm
 RUN printf 'server {\n\
@@ -121,5 +118,5 @@ stderr_logfile_maxbytes=0\n' > /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080
 
-# At runtime: patch nginx listen port from $PORT, enable site, migrate, start supervisor
-CMD ["sh", "-c", "sed -i \"s/listen [0-9]*/listen ${PORT:-8080}/\" /etc/nginx/sites-available/default && ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
+# At runtime: patch nginx port, enable site, cache config/routes/views, migrate, start supervisor
+CMD ["sh", "-c", "sed -i \"s/listen [0-9]*/listen ${PORT:-8080}/\" /etc/nginx/sites-available/default && ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]

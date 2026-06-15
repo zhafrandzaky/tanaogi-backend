@@ -2,7 +2,7 @@
 # Multi-stage Dockerfile — TanaOgi Backend (Laravel 13 + PHP 8.4)
 # ============================================================
 # Stage "dev"    → local development via docker-compose (default target)
-# Stage "production" → Railway deployment (nginx + php-fpm, port 8080)
+# Stage "production" → Railway deployment (nginx + php-fpm, port $PORT)
 # ============================================================
 
 # --- Base: PHP extensions + system packages -----------------
@@ -39,7 +39,7 @@ FROM base AS production
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx supervisor \
     && rm -rf /var/lib/apt/lists/* \
-    && rm /etc/nginx/sites-enabled/default
+    && rm -f /etc/nginx/sites-enabled/default
 
 # Composer: production-only deps
 COPY composer.json composer.lock ./
@@ -61,9 +61,9 @@ RUN composer dump-autoload --optimize \
     && php artisan route:cache \
     && php artisan view:cache
 
-# Nginx config — listen on 8080, proxy PHP to local php-fpm
+# Nginx config — listen on $PORT (default 8080), proxy PHP to local php-fpm
 RUN printf 'server {\n\
-    listen 8080;\n\
+    listen %s;\n\
     server_name _;\n\
     root /var/www/public;\n\
     index index.php;\n\
@@ -84,7 +84,7 @@ RUN printf 'server {\n\
     location ~ /\\.(?!well-known).* {\n\
         deny all;\n\
     }\n\
-}\n' > /etc/nginx/sites-available/default
+}\n' "${PORT:-8080}" > /etc/nginx/sites-available/default
 
 # Supervisor: run nginx + php-fpm + cron (Laravel scheduler) together
 RUN printf '[supervisord]\n\
@@ -121,5 +121,5 @@ stderr_logfile_maxbytes=0\n' > /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080
 
-# Run migrations on start, then launch supervisor (nginx + php-fpm + cron)
-CMD ["sh", "-c", "php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]
+# At runtime: patch nginx listen port from $PORT, enable site, migrate, start supervisor
+CMD ["sh", "-c", "sed -i \"s/listen [0-9]*/listen ${PORT:-8080}/\" /etc/nginx/sites-available/default && ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default && php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]

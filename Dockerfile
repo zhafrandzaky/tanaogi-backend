@@ -81,7 +81,7 @@ RUN printf 'server {\n\
     }\n\
 }\n' > /etc/nginx/sites-available/default
 
-# Supervisor: run nginx + php-fpm together
+# Supervisor: run nginx + php-fpm + cron (Laravel scheduler) together
 RUN printf '[supervisord]\n\
 nodaemon=true\n\
 logfile=/dev/null\n\
@@ -103,9 +103,18 @@ autorestart=true\n\
 stdout_logfile=/dev/stdout\n\
 stdout_logfile_maxbytes=0\n\
 stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0\n\
+\n\
+[program:cron]\n\
+command=sh -c "while true; do php /var/www/artisan schedule:run; sleep 60; done"\n\
+autostart=true\n\
+autorestart=true\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
 stderr_logfile_maxbytes=0\n' > /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080
 
-# Run migrations on start, then launch supervisor (nginx + php-fpm)
+# Run migrations on start, then launch supervisor (nginx + php-fpm + cron)
 CMD ["sh", "-c", "php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"]

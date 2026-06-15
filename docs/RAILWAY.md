@@ -29,7 +29,7 @@ Cloudflare R2: tanaogi-storage
 ### 3. Deploy Laravel App
 - New Service → GitHub Repo
 - Pilih repo `tanaogi-backend`
-- Railway otomatis detect Dockerfile dan build
+- Railway otomatis detect Dockerfile (production stage) dan build
 
 ---
 
@@ -64,7 +64,8 @@ CLOUDFLARE_R2_BUCKET=tanaogi-storage
 CLOUDFLARE_R2_ENDPOINT=https://{account_id}.r2.cloudflarestorage.com
 CLOUDFLARE_R2_URL=https://storage.tanaogi.zyy.my.id
 
-FONNTE_TOKEN=your_fonnte_token_production
+WAAPI_URL=https://waapi.fyas.my.id
+WAAPI_KEY=wapi_production_key
 ADMIN_WHATSAPP=628xxxxxxxxxx
 
 MAIL_MAILER=smtp
@@ -78,32 +79,21 @@ MAIL_FROM_NAME=TanaOgi
 
 ---
 
-## Dockerfile untuk Production
+## Dockerfile (Multi-Stage)
 
-```dockerfile
-FROM php:8.3-fpm
+Dockerfile menggunakan multi-stage build. Railway otomatis menggunakan stage `production` (stage terakhir).
 
-RUN apt-get update && apt-get install -y \
-    git curl default-mysql-client libzip-dev zip unzip nginx supervisor \
-    && docker-php-ext-install pdo pdo_mysql zip bcmath opcache
-
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www
-
-COPY . .
-
-RUN composer install --optimize-autoloader --no-dev \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
-
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
-
-EXPOSE 8080
-
-CMD ["sh", "-c", "php artisan migrate --force && php-fpm -D && nginx -g 'daemon off;'"]
 ```
+Stage "base"       → PHP 8.4-fpm + pdo_mysql + opcache + composer
+Stage "dev"        → semua composer deps (untuk docker-compose lokal)
+Stage "production" → --no-dev + config:cache + route:cache + view:cache
+                     nginx + supervisor, expose 8080
+```
+
+**Stage production** menjalankan:
+- nginx (port 8080) dan php-fpm (port 9000 internal) via supervisord
+- `php artisan migrate --force` sebelum start
+- Nginx root: `/var/www/public`
 
 ---
 
@@ -113,26 +103,66 @@ CMD ["sh", "-c", "php artisan migrate --force && php-fpm -D && nginx -g 'daemon 
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "DOCKERFILE"
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile"
   },
   "deploy": {
     "healthcheckPath": "/api/v1/health",
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3
   }
 }
 ```
 
+Railway memanggil `GET /api/v1/health` setiap deploy. Endpoint ini **tanpa auth** dan mengembalikan:
+
+```json
+{ "status": "ok", "service": "TanaOgi API" }
+```
+
 ---
 
-## Health Check Endpoint
+## Pre-Deploy Checklist
 
-```php
-Route::get('/health', fn() => response()->json([
-    'status'  => 'ok',
-    'service' => 'TanaOgi API',
-]));
-```
+**Wajib diselesaikan sebelum push ke main / merge PR:**
+
+### Railway Variables
+- [ ] `APP_KEY` — generate dengan `php artisan key:generate --show`
+- [ ] `APP_DEBUG=false`
+- [ ] `APP_ENV=production`
+- [ ] `LOG_CHANNEL=stderr`
+- [ ] `MAINTENANCE_SECRET` — password production yang kuat
+- [ ] Semua DB vars ter-set via Railway reference:
+  - `DB_HOST=${{tanaogi-db.MYSQLHOST}}`
+  - `DB_PORT=${{tanaogi-db.MYSQLPORT}}`
+  - `DB_DATABASE=${{tanaogi-db.MYSQLDATABASE}}`
+  - `DB_USERNAME=${{tanaogi-db.MYSQLUSER}}`
+  - `DB_PASSWORD=${{tanaogi-db.MYSQLPASSWORD}}`
+
+### Cloudflare R2 (Production Bucket)
+- [ ] Bucket `tanaogi-storage` sudah dibuat di Cloudflare R2
+- [ ] Custom domain `storage.tanaogi.zyy.my.id` sudah di-setup
+- [ ] `CLOUDFLARE_R2_ACCESS_KEY` — API token production
+- [ ] `CLOUDFLARE_R2_SECRET_KEY` — API token production
+- [ ] `CLOUDFLARE_R2_BUCKET=tanaogi-storage`
+- [ ] `CLOUDFLARE_R2_ENDPOINT` — URL endpoint R2
+- [ ] `CLOUDFLARE_R2_URL=https://storage.tanaogi.zyy.my.id`
+
+### WhatsApp (WaAPI)
+- [ ] `WAAPI_URL` — URL WaAPI production
+- [ ] `WAAPI_KEY` — API key WaAPI production
+- [ ] `ADMIN_WHATSAPP` — nomor admin penerima notifikasi
+
+### Email (SMTP)
+- [ ] `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD` — SMTP production (e.g. Resend)
+
+### Post-Deploy
+- [ ] `php artisan migrate --force` — otomatis dijalankan saat container start
+- [ ] Admin default password **wajib diganti** setelah deploy pertama
+- [ ] Verifikasi `GET /api/v1/health` return `{ "status": "ok" }`
+- [ ] Verifikasi login admin berfungsi
+- [ ] Verifikasi upload foto ke R2 production berhasil
 
 ---
 
@@ -149,8 +179,8 @@ Route::get('/health', fn() => response()->json([
 
 ## Laravel Scheduler di Railway
 
+Opsi 1 — Cron di Railway service:
 ```json
-// railway.json — tambahkan scheduler sebagai cron job terpisah
 {
   "deploy": {
     "cronSchedule": "* * * * *",
@@ -159,7 +189,7 @@ Route::get('/health', fn() => response()->json([
 }
 ```
 
-Atau buat service terpisah di Railway khusus scheduler.
+Opsi 2 — Service terpisah khusus scheduler (recommended).
 
 ---
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Admin;
 use App\Http\Controllers\Api\V1\Admin\Blacklist;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\DestinationController;
+use App\Http\Controllers\Api\V1\MaintenanceController;
 use App\Http\Controllers\Api\V1\RegencyController;
 use App\Http\Controllers\Api\V1\SettingController;
 use App\Http\Controllers\Api\V1\VehicleController;
@@ -27,6 +28,7 @@ Route::get('/vehicles', [VehicleController::class, 'index']);
 Route::get('/accommodations', [AccommodationController::class, 'index']);
 Route::get('/destinations/{slug}/accommodations', [AccommodationController::class, 'byDestination']);
 Route::get('/settings/whatsapp', [SettingController::class, 'whatsapp']);
+Route::get('/maintenance/status', [MaintenanceController::class, 'status']);
 
 // Admin endpoints
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
@@ -67,8 +69,9 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     Route::put('settings', [Admin\SettingController::class, 'update']);
 
     // Maintenance
-    Route::get('maintenance', [Admin\MaintenanceController::class, 'status']);
-    Route::post('maintenance/toggle', [Admin\MaintenanceController::class, 'toggle']);
+    Route::get('maintenance/status', [Admin\MaintenanceController::class, 'status']);
+    Route::post('maintenance/enable', [Admin\MaintenanceController::class, 'enable']);
+    Route::post('maintenance/disable', [Admin\MaintenanceController::class, 'disable']);
 
     // Blacklist / Whitelist
     Route::prefix('blacklist')->group(function () {

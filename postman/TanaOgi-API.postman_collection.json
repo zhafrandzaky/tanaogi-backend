@@ -649,7 +649,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Ahmad Syaifuddin\",\n    \"phone\": \"628123456789\",\n    \"is_active\": true\n}",
+              "raw": "{\n    \"name\": \"Ahmad Syaifuddin\",\n    \"phone\": \"628123456789\",\n    \"vehicle_type\": \"car\",\n    \"is_active\": true\n}",
               "options": {"raw": {"language": "json"}}
             },
             "url": {
@@ -682,7 +682,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Ahmad Syaifuddin\",\n    \"phone\": \"628123456789\",\n    \"is_active\": true\n}",
+              "raw": "{\n    \"name\": \"Ahmad Syaifuddin\",\n    \"phone\": \"628123456789\",\n    \"vehicle_type\": \"car\",\n    \"is_active\": true\n}",
               "options": {"raw": {"language": "json"}}
             },
             "url": {
@@ -780,7 +780,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"destination_id\": \"DESTINATION_UUID\",\n    \"vehicle_id\": \"VEHICLE_UUID\",\n    \"accommodation_id\": null,\n    \"user_name\": \"Budi Santoso\",\n    \"user_phone\": \"08123456789\",\n    \"departure_date\": \"2025-06-20\",\n    \"return_date\": \"2025-06-22\",\n    \"is_overnight\": true,\n    \"pickup_location\": \"Hakuna Matata Resort, Jl. Poros Bira\",\n    \"notes\": \"catatan tambahan\"\n}",
+              "raw": "{\n    \"destination_id\": \"DESTINATION_UUID\",\n    \"vehicle_id\": \"VEHICLE_UUID\",\n    \"accommodation_id\": null,\n    \"user_name\": \"Budi Santoso\",\n    \"user_phone\": \"628123456789\",\n    \"departure_date\": \"2025-06-20\",\n    \"return_date\": \"2025-06-22\",\n    \"is_overnight\": true,\n    \"pickup_location\": \"Hakuna Matata Resort, Jl. Poros Bira\",\n    \"notes\": \"catatan tambahan\"\n}",
               "options": {"raw": {"language": "json"}}
             },
             "url": {
@@ -836,6 +836,45 @@
               "variable": [{"key": "id", "value": ""}]
             }
           }
+        },
+        {
+          "name": "Confirm Driver Order",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders/:id/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders", ":id", "confirm"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Complete Driver Order",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders/:id/complete",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders", ":id", "complete"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Cancel Driver Order",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": {
+              "raw": "{{base_url}}/admin/driver-orders/:id/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "driver-orders", ":id", "cancel"],
+              "variable": [{"key": "id", "value": ""}]
+            }
+          }
         }
       ]
     },
@@ -868,7 +907,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Admin TanaOgi\",\n    \"email\": \"admin@tanaogi.zyy.my.id\",\n    \"password\": \"password\",\n    \"role\": \"admin\"\n}",
+              "raw": "{\n    \"name\": \"Admin TanaOgi\",\n    \"email\": \"admin@tanaogi.zyy.my.id\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}",
               "options": {"raw": {"language": "json"}}
             },
             "url": {
@@ -901,7 +940,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Admin TanaOgi\",\n    \"email\": \"admin@tanaogi.zyy.my.id\",\n    \"password\": \"password\",\n    \"role\": \"admin\"\n}",
+              "raw": "{\n    \"name\": \"Admin TanaOgi\",\n    \"email\": \"admin@tanaogi.zyy.my.id\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}",
               "options": {"raw": {"language": "json"}}
             },
             "url": {

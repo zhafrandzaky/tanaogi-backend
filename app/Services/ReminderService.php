@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
-use App\Enums\DriverOrderStatus;
 use App\Models\DriverOrder;
+use App\Repositories\Contracts\DriverOrderRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class ReminderService
 {
     public function __construct(
+        private readonly DriverOrderRepositoryInterface $driverOrderRepository,
         private readonly WhatsappService $whatsappService,
         private readonly SettingService $settingService,
     ) {}
@@ -32,13 +33,7 @@ class ReminderService
     {
         $hoursBeforePickup = (int) ($this->settingService->get('reminder_hours_before_pickup') ?? 3);
 
-        $orders = DriverOrder::query()
-            ->where('is_overnight', false)
-            ->whereDate('return_date', today())
-            ->whereNotNull('driver_id')
-            ->where('return_reminded', false)
-            ->where('status', DriverOrderStatus::CONFIRMED)
-            ->get();
+        $orders = $this->driverOrderRepository->findPendingOneDayReminders();
 
         foreach ($orders as $order) {
             // Asumsi penjemputan pulang jam 17.00 (default)
@@ -65,13 +60,7 @@ class ReminderService
 
         $tomorrow = today()->addDay();
 
-        $orders = DriverOrder::query()
-            ->where('is_overnight', true)
-            ->whereDate('return_date', $tomorrow)
-            ->whereNotNull('driver_id')
-            ->where('return_reminded', false)
-            ->where('status', DriverOrderStatus::CONFIRMED)
-            ->get();
+        $orders = $this->driverOrderRepository->findPendingOvernightReminders($tomorrow);
 
         foreach ($orders as $order) {
             $this->sendReturnReminder($order);

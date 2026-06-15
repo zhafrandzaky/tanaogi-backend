@@ -3,6 +3,7 @@
 namespace App\Repositories\Contracts;
 
 use App\Models\DriverOrder;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 interface DriverOrderRepositoryInterface
@@ -15,4 +16,6 @@ interface DriverOrderRepositoryInterface
     public function assignDriver(DriverOrder $order, string $driverId): DriverOrder;
     public function updateStatus(DriverOrder $order, string $status): DriverOrder;
     public function markReturnReminded(DriverOrder $order): DriverOrder;
+    public function findPendingOneDayReminders(): Collection;
+    public function findPendingOvernightReminders(Carbon $date): Collection;
 }

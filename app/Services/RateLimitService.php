@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\RequestLog;
+use App\Repositories\Contracts\RequestLogRepositoryInterface;
 
 class RateLimitService
 {
     public function __construct(
         private BlacklistService $blacklistService,
         private SettingService $settingService,
+        private RequestLogRepositoryInterface $requestLogRepository,
     ) {}
 
     public function checkAndLogIp(string $ip, string $endpoint): void
@@ -17,7 +18,11 @@ class RateLimitService
             return;
         }
 
-        RequestLog::create(['ip_address' => $ip, 'endpoint' => $endpoint, 'created_at' => now()]);
+        $this->requestLogRepository->create([
+            'ip_address' => $ip,
+            'endpoint'   => $endpoint,
+            'created_at' => now(),
+        ]);
 
         if (!$this->settingService->isAutoBanEnabled()) {
             return;
@@ -43,7 +48,7 @@ class RateLimitService
             return;
         }
 
-        RequestLog::create([
+        $this->requestLogRepository->create([
             'ip_address' => request()->ip(),
             'phone'      => $phone,
             'endpoint'   => $endpoint,
@@ -71,20 +76,16 @@ class RateLimitService
 
     public function getIpRequestCount(string $ip, int $minutes): int
     {
-        return RequestLog::where('ip_address', $ip)
-            ->where('created_at', '>=', now()->subMinutes($minutes))
-            ->count();
+        return $this->requestLogRepository->countByIpSince($ip, $minutes);
     }
 
     public function getPhoneOrderCount(string $phone, int $hours): int
     {
-        return RequestLog::where('phone', $phone)
-            ->where('created_at', '>=', now()->subHours($hours))
-            ->count();
+        return $this->requestLogRepository->countByPhoneSince($phone, $hours);
     }
 
     public function cleanOldLogs(): void
     {
-        RequestLog::where('created_at', '<', now()->subHours(24))->delete();
+        $this->requestLogRepository->deleteOlderThan(24);
     }
 }

@@ -13,7 +13,19 @@ class CheckMaintenance
 
     public function handle(Request $request, Closure $next): Response
     {
+        // Allow maintenance status endpoint to always be accessible
+        if ($request->is('api/v1/maintenance/status')) {
+            return $next($request);
+        }
+
+        // Admin with token can bypass maintenance
         if ($request->bearerToken() && $request->user()?->hasRole('admin')) {
+            return $next($request);
+        }
+
+        // Secret bypass (matches Laravel's --secret option)
+        $secret = config('app.maintenance_secret');
+        if ($secret && $request->query('secret') === $secret) {
             return $next($request);
         }
 

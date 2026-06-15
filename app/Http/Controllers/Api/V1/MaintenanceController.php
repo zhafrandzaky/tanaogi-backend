@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Admin;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Services\MaintenanceService;
@@ -21,19 +21,5 @@ class MaintenanceController extends Controller
             'Status maintenance berhasil diambil',
             ['is_maintenance' => $this->maintenanceService->isActive()]
         );
-    }
-
-    public function enable(): JsonResponse
-    {
-        $this->maintenanceService->enable();
-
-        return $this->success('Mode maintenance berhasil diaktifkan');
-    }
-
-    public function disable(): JsonResponse
-    {
-        $this->maintenanceService->disable();
-
-        return $this->success('Mode maintenance berhasil dinonaktifkan');
     }
 }

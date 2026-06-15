@@ -60,6 +60,16 @@ class BlacklistService
         return (bool) WhitelistIp::where('id', $id)->delete();
     }
 
+    public function findBlacklistIpById(string $id): BlacklistIp
+    {
+        return BlacklistIp::findOrFail($id);
+    }
+
+    public function deleteBlacklistIp(string $id): bool
+    {
+        return (bool) BlacklistIp::where('id', $id)->delete();
+    }
+
     public function getBlacklistedIps(): Collection
     {
         return BlacklistIp::active()->latest('banned_at')->get();
@@ -68,6 +78,11 @@ class BlacklistService
     public function getWhitelistedIps(): Collection
     {
         return WhitelistIp::active()->get();
+    }
+
+    public function findWhitelistIpById(string $id): WhitelistIp
+    {
+        return WhitelistIp::findOrFail($id);
     }
 
     // ─── Phone ───────────────────────────────────────────────────────────────
@@ -119,6 +134,16 @@ class BlacklistService
         return (bool) WhitelistPhone::where('id', $id)->delete();
     }
 
+    public function findBlacklistPhoneById(string $id): BlacklistPhone
+    {
+        return BlacklistPhone::findOrFail($id);
+    }
+
+    public function deleteBlacklistPhone(string $id): bool
+    {
+        return (bool) BlacklistPhone::where('id', $id)->delete();
+    }
+
     public function getBlacklistedPhones(): Collection
     {
         return BlacklistPhone::active()->latest('banned_at')->get();
@@ -127,5 +152,10 @@ class BlacklistService
     public function getWhitelistedPhones(): Collection
     {
         return WhitelistPhone::active()->get();
+    }
+
+    public function findWhitelistPhoneById(string $id): WhitelistPhone
+    {
+        return WhitelistPhone::findOrFail($id);
     }
 }

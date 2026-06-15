@@ -75,12 +75,14 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
 
     // Blacklist / Whitelist
     Route::prefix('blacklist')->group(function () {
-        Route::apiResource('ips', Blacklist\BlacklistIpController::class);
-        Route::apiResource('phones', Blacklist\BlacklistPhoneController::class);
+        Route::apiResource('ips', Blacklist\BlacklistIpController::class)->except(['update']);
+        Route::post('ips/{id}/unban', [Blacklist\BlacklistIpController::class, 'unban']);
+        Route::apiResource('phones', Blacklist\BlacklistPhoneController::class)->except(['update']);
+        Route::post('phones/{id}/unban', [Blacklist\BlacklistPhoneController::class, 'unban']);
     });
 
     Route::prefix('whitelist')->group(function () {
-        Route::apiResource('ips', Blacklist\WhitelistIpController::class);
-        Route::apiResource('phones', Blacklist\WhitelistPhoneController::class);
+        Route::apiResource('ips', Blacklist\WhitelistIpController::class)->except(['update', 'show']);
+        Route::apiResource('phones', Blacklist\WhitelistPhoneController::class)->except(['update', 'show']);
     });
 });

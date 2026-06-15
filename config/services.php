@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'waapi' => [
+        'url' => env('WAAPI_URL'),
+        'key' => env('WAAPI_KEY'),
+    ],
+
 ];

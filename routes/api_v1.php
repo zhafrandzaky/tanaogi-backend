@@ -73,16 +73,17 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     Route::post('maintenance/enable', [Admin\MaintenanceController::class, 'enable']);
     Route::post('maintenance/disable', [Admin\MaintenanceController::class, 'disable']);
 
-    // Blacklist / Whitelist
+    // Blacklist
     Route::prefix('blacklist')->group(function () {
-        Route::apiResource('ips', Blacklist\BlacklistIpController::class)->except(['update']);
-        Route::post('ips/{id}/unban', [Blacklist\BlacklistIpController::class, 'unban']);
-        Route::apiResource('phones', Blacklist\BlacklistPhoneController::class)->except(['update']);
-        Route::post('phones/{id}/unban', [Blacklist\BlacklistPhoneController::class, 'unban']);
+        Route::apiResource('ips', Blacklist\BlacklistIpController::class)->except(['update'])->name('blacklist.ips');
+        Route::post('ips/{id}/unban', [Blacklist\BlacklistIpController::class, 'unban'])->name('blacklist.ips.unban');
+        Route::apiResource('phones', Blacklist\BlacklistPhoneController::class)->except(['update'])->name('blacklist.phones');
+        Route::post('phones/{id}/unban', [Blacklist\BlacklistPhoneController::class, 'unban'])->name('blacklist.phones.unban');
     });
 
+    // Whitelist
     Route::prefix('whitelist')->group(function () {
-        Route::apiResource('ips', Blacklist\WhitelistIpController::class)->except(['update', 'show']);
-        Route::apiResource('phones', Blacklist\WhitelistPhoneController::class)->except(['update', 'show']);
+        Route::apiResource('ips', Blacklist\WhitelistIpController::class)->except(['update', 'show'])->name('whitelist.ips');
+        Route::apiResource('phones', Blacklist\WhitelistPhoneController::class)->except(['update', 'show'])->name('whitelist.phones');
     });
 });

@@ -48,13 +48,18 @@ RUN composer install --optimize-autoloader --no-dev --no-scripts --no-autoloader
 # Application source
 COPY . .
 
+# Ensure storage/cache directories exist before artisan cache commands
+RUN mkdir -p /var/www/storage/framework/views \
+    /var/www/storage/framework/cache/data \
+    /var/www/storage/framework/sessions \
+    /var/www/storage/logs \
+    /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
 RUN composer dump-autoload --optimize \
     && php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache
-
-# Permissions
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 # Nginx config — listen on 8080, proxy PHP to local php-fpm
 RUN printf 'server {\n\

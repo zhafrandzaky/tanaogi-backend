@@ -75,15 +75,33 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
 
     // Blacklist
     Route::prefix('blacklist')->group(function () {
-        Route::apiResource('ips', Blacklist\BlacklistIpController::class)->except(['update'])->name('blacklist.ips');
+        Route::apiResource('ips', Blacklist\BlacklistIpController::class)->except(['update'])->names([
+            'index'   => 'blacklist.ips.index',
+            'store'   => 'blacklist.ips.store',
+            'show'    => 'blacklist.ips.show',
+            'destroy' => 'blacklist.ips.destroy',
+        ]);
         Route::post('ips/{id}/unban', [Blacklist\BlacklistIpController::class, 'unban'])->name('blacklist.ips.unban');
-        Route::apiResource('phones', Blacklist\BlacklistPhoneController::class)->except(['update'])->name('blacklist.phones');
+        Route::apiResource('phones', Blacklist\BlacklistPhoneController::class)->except(['update'])->names([
+            'index'   => 'blacklist.phones.index',
+            'store'   => 'blacklist.phones.store',
+            'show'    => 'blacklist.phones.show',
+            'destroy' => 'blacklist.phones.destroy',
+        ]);
         Route::post('phones/{id}/unban', [Blacklist\BlacklistPhoneController::class, 'unban'])->name('blacklist.phones.unban');
     });
 
     // Whitelist
     Route::prefix('whitelist')->group(function () {
-        Route::apiResource('ips', Blacklist\WhitelistIpController::class)->except(['update', 'show'])->name('whitelist.ips');
-        Route::apiResource('phones', Blacklist\WhitelistPhoneController::class)->except(['update', 'show'])->name('whitelist.phones');
+        Route::apiResource('ips', Blacklist\WhitelistIpController::class)->except(['update', 'show'])->names([
+            'index'   => 'whitelist.ips.index',
+            'store'   => 'whitelist.ips.store',
+            'destroy' => 'whitelist.ips.destroy',
+        ]);
+        Route::apiResource('phones', Blacklist\WhitelistPhoneController::class)->except(['update', 'show'])->names([
+            'index'   => 'whitelist.phones.index',
+            'store'   => 'whitelist.phones.store',
+            'destroy' => 'whitelist.phones.destroy',
+        ]);
     });
 });

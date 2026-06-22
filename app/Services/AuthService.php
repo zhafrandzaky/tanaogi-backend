@@ -34,6 +34,26 @@ class AuthService
         ];
     }
 
+    public function googleLogin(array $googleUser): array
+    {
+        // Cari user berdasarkan email Google, atau buat baru jika belum ada
+        $user = \App\Models\User::firstOrCreate(
+            ['email' => $googleUser['email']],
+            [
+                'name' => $googleUser['name'],
+                'password' => Hash::make(str()->random(24)), // Random password untuk user social
+            ]
+        );
+
+        // Buat token
+        $token = $user->createToken('google-token')->plainTextToken;
+
+        return [
+            'token' => $token,
+            'user' => $user,
+        ];
+    }
+
     public function logout(User $user): void
     {
         $user->currentAccessToken()->delete();

@@ -18,6 +18,8 @@ Route::get('/health', fn () => response()->json([
 
 // Auth
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::get('/auth/google/redirect', [AuthController::class, 'googleRedirect']);
+Route::post('/auth/google/callback', [AuthController::class, 'googleCallback']);
 Route::middleware('auth:sanctum')->post('/auth/logout', [AuthController::class, 'logout']);
 
 // Public endpoints

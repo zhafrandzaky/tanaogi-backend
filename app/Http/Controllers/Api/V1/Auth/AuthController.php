@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Services\AuthService;
@@ -21,6 +22,16 @@ class AuthController extends Controller
         private readonly AuthService $authService
     ) {}
 
+    public function register(RegisterRequest $request): JsonResponse
+    {
+        $result = $this->authService->register($request->validated());
+
+        return $this->success('User registered successfully', [
+            'token' => $result['token'],
+            'user' => UserResource::make($result['user']),
+        ], 201);
+    }
+    
     public function login(LoginRequest $request): JsonResponse
     {
         try {

@@ -14,6 +14,26 @@ class AuthService
         private readonly UserRepositoryInterface $userRepository
     ) {}
 
+    public function register(array $data): array
+    {
+        // Create new user in database
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'whatsapp' => $data['whatsapp'] ?? null,
+            'address' => $data['address'] ?? null,
+        ]);
+
+        // Generate token for auto-login after register
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return [
+            'user' => $user,
+            'token' => $token,
+        ];
+    }
+    
     public function login(array $credentials): array
     {
         $user = $this->userRepository->findByEmail($credentials['email']);

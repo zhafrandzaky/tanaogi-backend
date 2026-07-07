@@ -42,30 +42,25 @@ class AuthService
             throw new AuthenticationException('Email atau password salah');
         }
 
-        if (! $user->hasRole('admin')) {
-            throw new AuthorizationException('Anda tidak memiliki akses');
-        }
-
-        $token = $user->createToken('admin-token')->plainTextToken;
+        $token = $user->createToken('tanaogi-api-token')->plainTextToken;
 
         return [
             'token' => $token,
             'user' => $user,
+            'role' => $user->hasRole('admin') ? 'admin' : 'regular_user'
         ];
     }
 
     public function googleLogin(array $googleUser): array
     {
-        // Cari user berdasarkan email Google, atau buat baru jika belum ada
         $user = \App\Models\User::firstOrCreate(
             ['email' => $googleUser['email']],
             [
                 'name' => $googleUser['name'],
-                'password' => Hash::make(str()->random(24)), // Random password untuk user social
+                'password' => Hash::make(str()->random(24)),
             ]
         );
 
-        // Buat token
         $token = $user->createToken('google-token')->plainTextToken;
 
         return [

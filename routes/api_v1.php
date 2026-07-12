@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\MaintenanceController;
 use App\Http\Controllers\Api\V1\RegencyController;
 use App\Http\Controllers\Api\V1\SettingController;
 use App\Http\Controllers\Api\V1\VehicleController;
+use App\Http\Controllers\Api\V1\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', fn () => response()->json([
@@ -22,8 +23,10 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::get('/auth/google/redirect', [AuthController::class, 'googleRedirect']);
 Route::post('/auth/google/callback', [AuthController::class, 'googleCallback']);
 Route::middleware('auth:sanctum')->post('/auth/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->post('/reviews', [ReviewController::class, 'store']);
 
 // Public endpoints
+Route::get('/reviews', [ReviewController::class, 'index']); // <-- INI RUTE GET YANG BARU DITAMBAHKAN
 Route::get('/regencies', [RegencyController::class, 'index']);
 Route::get('/destinations', [DestinationController::class, 'index']);
 Route::get('/destinations/{slug}', [DestinationController::class, 'show']);
@@ -32,6 +35,7 @@ Route::get('/accommodations', [AccommodationController::class, 'index']);
 Route::get('/destinations/{slug}/accommodations', [AccommodationController::class, 'byDestination']);
 Route::get('/settings/whatsapp', [SettingController::class, 'whatsapp']);
 Route::get('/maintenance/status', [MaintenanceController::class, 'status']);
+
 
 // Admin endpoints
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {

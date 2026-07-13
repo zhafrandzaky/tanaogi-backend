@@ -8,7 +8,7 @@ class RegisterRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Ubah jadi true agar bisa diakses
+        return true;
     }
 
     public function rules(): array
@@ -19,6 +19,7 @@ class RegisterRequest extends FormRequest
             'whatsapp' => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'address' => ['nullable', 'string', 'max:500'],
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 }

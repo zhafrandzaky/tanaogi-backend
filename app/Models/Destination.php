@@ -56,6 +56,11 @@ class Destination extends Model
         return $this->hasMany(DriverOrder::class);
     }
 
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);

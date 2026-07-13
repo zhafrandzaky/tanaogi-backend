@@ -26,6 +26,14 @@ Route::middleware('auth:sanctum')->post('/auth/logout', [AuthController::class, 
 Route::middleware('auth:sanctum')->post('/auth/profile', [\App\Http\Controllers\Api\V1\Auth\ProfileController::class, 'update']);
 Route::middleware('auth:sanctum')->post('/reviews', [ReviewController::class, 'store']);
 
+// Wishlist (Protected)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/wishlists', [\App\Http\Controllers\Api\V1\WishlistController::class, 'index']);
+    Route::post('/wishlists/toggle', [\App\Http\Controllers\Api\V1\WishlistController::class, 'toggle']);
+    Route::put('/wishlists/{id}/note', [\App\Http\Controllers\Api\V1\WishlistController::class, 'updateNote']);
+    Route::delete('/wishlists/{id}', [\App\Http\Controllers\Api\V1\WishlistController::class, 'destroy']);
+});
+
 // Public endpoints
 Route::get('/reviews', [ReviewController::class, 'index']); // <-- INI RUTE GET YANG BARU DITAMBAHKAN
 Route::get('/regencies', [RegencyController::class, 'index']);

@@ -23,6 +23,7 @@ class AuthService
             'password' => Hash::make($data['password']),
             'whatsapp' => $data['whatsapp'] ?? null,
             'address' => $data['address'] ?? null,
+            'avatar'   => $data['avatar'] ?? null,
         ]);
 
         // Generate token for auto-login after register

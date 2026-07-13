@@ -13,6 +13,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -24,7 +26,17 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $result = $this->authService->register($request->validated());
+        $dataValidasi = $request->validated();
+
+        if ($request->hasFile('avatar')) {
+            $berkasFoto = $request->file('avatar');
+            $jalurSimpan = 'avatars/' . Str::uuid() . '.' . $berkasFoto->getClientOriginalExtension();
+
+            Storage::disk('r2')->put($jalurSimpan, file_get_contents($berkasFoto), 'public');
+            $dataValidasi['avatar'] = Storage::disk('r2')->url($jalurSimpan);
+        }
+
+        $result = $this->authService->register($dataValidasi);
 
         return $this->success('User registered successfully', [
             'token' => $result['token'],
@@ -56,7 +68,6 @@ class AuthController extends Controller
     public function googleCallback(Request $request): JsonResponse
     {
         try {
-            // Membaca access_token yang dikirim via POST dari frontend
             $googleUser = Socialite::driver('google')->stateless()->userFromToken($request->access_token);
 
             $result = $this->authService->googleLogin([
@@ -70,7 +81,6 @@ class AuthController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            // Mencegah error 500 dan memberikan pesan yang jelas ke frontend
             return $this->error('Gagal memproses token Google: ' . $e->getMessage(), null, 500);
         }
     }

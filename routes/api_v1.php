@@ -23,6 +23,7 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::get('/auth/google/redirect', [AuthController::class, 'googleRedirect']);
 Route::post('/auth/google/callback', [AuthController::class, 'googleCallback']);
 Route::middleware('auth:sanctum')->post('/auth/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->post('/auth/profile', [\App\Http\Controllers\Api\V1\Auth\ProfileController::class, 'update']);
 Route::middleware('auth:sanctum')->post('/reviews', [ReviewController::class, 'store']);
 
 // Public endpoints

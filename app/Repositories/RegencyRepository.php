@@ -38,4 +38,16 @@ class RegencyRepository implements RegencyRepositoryInterface
     {
         return $regency->delete();
     }
+
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null)
+    {
+        $query = Regency::query();
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+        if ($status !== null && $status !== '') {
+            $query->where('is_active', $status === 'active' || $status === '1' || $status === 'true');
+        }
+        return $query->orderBy('name')->paginate($perPage);
+    }
 }

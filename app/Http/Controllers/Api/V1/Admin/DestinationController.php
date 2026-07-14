@@ -19,13 +19,19 @@ class DestinationController extends Controller
         private readonly DestinationService $destinationService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(\Illuminate\Http\Request $request): JsonResponse
     {
-        $destinations = $this->destinationService->getAll();
+        $perPage = $request->query('per_page', 10);
+        $search = $request->query('search');
+        $status = $request->query('status');
+        $regencyId = $request->query('regency_id');
 
-        return $this->success(
+        $paginator = $this->destinationService->paginate($perPage, $search, $status, $regencyId);
+
+        return $this->paginated(
             'Data destinasi berhasil diambil',
-            DestinationResource::collection($destinations)
+            $paginator,
+            DestinationResource::collection($paginator->items())
         );
     }
 

@@ -77,4 +77,19 @@ class DriverRepository implements DriverRepositoryInterface
             ->orderBy('departure_date')
             ->get();
     }
+
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null, ?string $vehicleType = null)
+    {
+        $query = Driver::query();
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+        if ($status !== null && $status !== '') {
+            $query->where('is_active', $status === 'active' || $status === '1' || $status === 'true');
+        }
+        if ($vehicleType) {
+            $query->where('vehicle_type', $vehicleType);
+        }
+        return $query->orderBy('name')->paginate($perPage);
+    }
 }

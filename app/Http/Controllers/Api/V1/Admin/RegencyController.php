@@ -18,13 +18,18 @@ class RegencyController extends Controller
         private readonly RegencyService $regencyService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(\Illuminate\Http\Request $request): JsonResponse
     {
-        $regencies = $this->regencyService->getAll();
+        $perPage = $request->query('per_page', 10);
+        $search = $request->query('search');
+        $status = $request->query('status');
 
-        return $this->success(
+        $paginator = $this->regencyService->paginate($perPage, $search, $status);
+
+        return $this->paginated(
             'Data kabupaten berhasil diambil',
-            RegencyResource::collection($regencies)
+            $paginator,
+            RegencyResource::collection($paginator->items())
         );
     }
 

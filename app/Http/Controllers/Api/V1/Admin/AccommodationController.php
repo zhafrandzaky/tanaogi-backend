@@ -18,13 +18,20 @@ class AccommodationController extends Controller
         private readonly AccommodationService $accommodationService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(\Illuminate\Http\Request $request): JsonResponse
     {
-        $accommodations = $this->accommodationService->getAll();
+        $perPage = $request->query('per_page', 10);
+        $search = $request->query('search');
+        $type = $request->query('type');
+        $status = $request->query('status');
+        $destinationId = $request->query('destination_id');
 
-        return $this->success(
+        $paginator = $this->accommodationService->paginate($perPage, $search, $type, $status, $destinationId);
+
+        return $this->paginated(
             'Data penginapan berhasil diambil',
-            AccommodationResource::collection($accommodations)
+            $paginator,
+            AccommodationResource::collection($paginator->items())
         );
     }
 

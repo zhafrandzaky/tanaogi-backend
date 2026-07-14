@@ -32,7 +32,7 @@ class DestinationRepository implements DestinationRepositoryInterface
 
     public function findBySlug(string $slug): ?Destination
     {
-        return Destination::with(['regency', 'images'])
+        return Destination::with(['regency', 'images', 'accommodations'])
             ->where('slug', $slug)
             ->where('is_active', true)
             ->first();
@@ -40,7 +40,7 @@ class DestinationRepository implements DestinationRepositoryInterface
 
     public function findById(string $id): ?Destination
     {
-        return Destination::with(['regency', 'images'])->find($id);
+        return Destination::with(['regency', 'images', 'accommodations'])->find($id);
     }
 
     public function slugExists(string $slug, ?string $excludeId = null): bool
@@ -68,5 +68,20 @@ class DestinationRepository implements DestinationRepositoryInterface
     public function delete(Destination $destination): bool
     {
         return $destination->delete();
+    }
+
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null, ?string $regencyId = null)
+    {
+        $query = Destination::with(['regency', 'images']);
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+        if ($status !== null && $status !== '') {
+            $query->where('is_active', $status === 'active' || $status === '1' || $status === 'true');
+        }
+        if ($regencyId) {
+            $query->where('regency_id', $regencyId);
+        }
+        return $query->orderBy('name')->paginate($perPage);
     }
 }

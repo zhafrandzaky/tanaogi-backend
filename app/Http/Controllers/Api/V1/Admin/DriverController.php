@@ -20,13 +20,19 @@ class DriverController extends Controller
         private readonly DriverService $driverService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(\Illuminate\Http\Request $request): JsonResponse
     {
-        $drivers = $this->driverService->getAll();
+        $perPage = $request->query('per_page', 10);
+        $search = $request->query('search');
+        $status = $request->query('status');
+        $vehicleType = $request->query('vehicle_type');
 
-        return $this->success(
+        $paginator = $this->driverService->paginate($perPage, $search, $status, $vehicleType);
+
+        return $this->paginated(
             'Data driver berhasil diambil',
-            DriverResource::collection($drivers)
+            $paginator,
+            DriverResource::collection($paginator->items())
         );
     }
 

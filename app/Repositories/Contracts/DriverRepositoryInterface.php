@@ -15,4 +15,5 @@ interface DriverRepositoryInterface
     public function delete(Driver $driver): bool;
     public function findAvailable(string $departureDate, string $returnDate, string $vehicleType): Collection;
     public function findScheduleByMonth(string $driverId, int $month, int $year): Collection;
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null, ?string $vehicleType = null);
 }

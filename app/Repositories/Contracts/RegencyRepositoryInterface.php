@@ -13,4 +13,5 @@ interface RegencyRepositoryInterface
     public function create(array $data): Regency;
     public function update(Regency $regency, array $data): Regency;
     public function delete(Regency $regency): bool;
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null);
 }

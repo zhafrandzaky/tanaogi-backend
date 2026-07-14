@@ -29,7 +29,15 @@ class DestinationController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $destination = $this->destinationService->findBySlug($slug);
+        if (\Illuminate\Support\Str::isUuid($slug)) {
+            $destination = $this->destinationService->findById($slug);
+        } else {
+            try {
+                $destination = $this->destinationService->findBySlug($slug);
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                $destination = $this->destinationService->findById($slug);
+            }
+        }
 
         return $this->success(
             'Detail destinasi berhasil diambil',

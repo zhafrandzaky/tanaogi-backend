@@ -41,4 +41,22 @@ class AccommodationRepository implements AccommodationRepositoryInterface
     {
         return $accommodation->delete();
     }
+
+    public function paginate(int $perPage, ?string $search = null, ?string $type = null, ?string $status = null, ?string $destinationId = null)
+    {
+        $query = Accommodation::with('destination');
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+        if ($type) {
+            $query->where('type', $type);
+        }
+        if ($status !== null && $status !== '') {
+            $query->where('is_active', $status === 'active' || $status === '1' || $status === 'true');
+        }
+        if ($destinationId) {
+            $query->where('destination_id', $destinationId);
+        }
+        return $query->orderBy('name')->paginate($perPage);
+    }
 }

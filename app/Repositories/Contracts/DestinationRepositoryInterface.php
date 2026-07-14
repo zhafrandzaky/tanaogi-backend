@@ -16,4 +16,5 @@ interface DestinationRepositoryInterface
     public function create(array $data): Destination;
     public function update(Destination $destination, array $data): Destination;
     public function delete(Destination $destination): bool;
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null, ?string $regencyId = null);
 }

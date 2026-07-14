@@ -141,4 +141,9 @@ class DestinationService
 
         return $slug;
     }
+
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null, ?string $regencyId = null)
+    {
+        return $this->destinationRepository->paginate($perPage, $search, $status, $regencyId);
+    }
 }

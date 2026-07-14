@@ -65,4 +65,9 @@ class RegencyService
         $regency = $this->findById($id);
         return $this->regencyRepository->update($regency, ['is_active' => !$regency->is_active]);
     }
+
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null)
+    {
+        return $this->regencyRepository->paginate($perPage, $search, $status);
+    }
 }

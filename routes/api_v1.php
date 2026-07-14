@@ -10,12 +10,15 @@ use App\Http\Controllers\Api\V1\RegencyController;
 use App\Http\Controllers\Api\V1\SettingController;
 use App\Http\Controllers\Api\V1\VehicleController;
 use App\Http\Controllers\Api\V1\ReviewController;
+use App\Http\Controllers\Api\V1\BookingController;
+use App\Http\Controllers\Api\V1\DriverController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', fn () => response()->json([
     'status'  => 'ok',
     'service' => 'TanaOgi API',
 ]));
+Route::get('/payments/config', [BookingController::class, 'paymentConfig']);
 
 // Auth
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -25,6 +28,11 @@ Route::post('/auth/google/callback', [AuthController::class, 'googleCallback']);
 Route::middleware('auth:sanctum')->post('/auth/logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->post('/auth/profile', [\App\Http\Controllers\Api\V1\Auth\ProfileController::class, 'update']);
 Route::middleware('auth:sanctum')->post('/reviews', [ReviewController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/bookings', [BookingController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/bookings/{booking}/mock-payment', [BookingController::class, 'completeMockPayment']);
+Route::middleware('auth:sanctum')->post('/bookings/{id}/retry-payment', [BookingController::class, 'retryPayment']);
+Route::middleware('auth:sanctum')->get('/bookings', [BookingController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/bookings/{id}', [BookingController::class, 'show']);
 
 // Wishlist (Protected)
 Route::middleware('auth:sanctum')->group(function () {
@@ -40,14 +48,19 @@ Route::get('/regencies', [RegencyController::class, 'index']);
 Route::get('/destinations', [DestinationController::class, 'index']);
 Route::get('/destinations/{slug}', [DestinationController::class, 'show']);
 Route::get('/vehicles', [VehicleController::class, 'index']);
+Route::get('/drivers', [DriverController::class, 'index']);
 Route::get('/accommodations', [AccommodationController::class, 'index']);
 Route::get('/destinations/{slug}/accommodations', [AccommodationController::class, 'byDestination']);
 Route::get('/settings/whatsapp', [SettingController::class, 'whatsapp']);
 Route::get('/maintenance/status', [MaintenanceController::class, 'status']);
+Route::post('/bookings/midtrans-webhook', [BookingController::class, 'handleWebhook']);
 
 
 // Admin endpoints
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    // Dashboard Stats
+    Route::get('dashboard/stats', [Admin\DashboardController::class, 'stats']);
+
     // Regencies
     Route::apiResource('regencies', Admin\RegencyController::class);
     Route::patch('regencies/{id}/toggle-active', [Admin\RegencyController::class, 'toggleActive']);

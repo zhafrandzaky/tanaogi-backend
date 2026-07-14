@@ -111,4 +111,9 @@ class DriverService
             'orders'        => $orderDetails,
         ];
     }
+
+    public function paginate(int $perPage, ?string $search = null, ?string $status = null, ?string $vehicleType = null)
+    {
+        return $this->driverRepository->paginate($perPage, $search, $status, $vehicleType);
+    }
 }

@@ -13,4 +13,5 @@ interface AccommodationRepositoryInterface
     public function create(array $data): Accommodation;
     public function update(Accommodation $accommodation, array $data): Accommodation;
     public function delete(Accommodation $accommodation): bool;
+    public function paginate(int $perPage, ?string $search = null, ?string $type = null, ?string $status = null, ?string $destinationId = null);
 }

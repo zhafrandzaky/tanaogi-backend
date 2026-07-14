@@ -65,4 +65,9 @@ class AccommodationService
         $accommodation = $this->findById($id);
         return $this->accommodationRepository->update($accommodation, ['is_active' => !$accommodation->is_active]);
     }
+
+    public function paginate(int $perPage, ?string $search = null, ?string $type = null, ?string $status = null, ?string $destinationId = null)
+    {
+        return $this->accommodationRepository->paginate($perPage, $search, $type, $status, $destinationId);
+    }
 }
